@@ -8,30 +8,55 @@ const Collection = require("../databases/Collection");
 
 
 collectionRouter.get("/all", async (request, reponse)=>{
+
     const collections = await Collection.findAll()
-    .catch(error=>{console.log(error)});
-    reponse.status(200).json(collections);
+    .catch(error=>{
+        console.log(error)
+        reponse.status(500).json("an error has occured")
+    });
+
+    if(collections){
+        reponse.status(200).json(collections);
+    }else{
+        reponse.status(400).json("an error has occured")
+    }
 });
 
 
 collectionRouter.get("/:id", async (request,reponse)=>{
-    const collection = await Collection.findByPk(request.params.id)
-    .catch(error=>{console.log(error)});
 
-    reponse.status(200).json(collection)
+    const collection = await Collection.findByPk(request.params.id)
+    .catch(error=>{
+        console.log(error)
+        reponse.status(500).json("an error has occured")
+    });
+
+    if(collection){
+        reponse.status(200).json(collection)
+    }else{
+        reponse.status(400).json("an error has occured")
+    }
 });
 
 
 collectionRouter.get("/search/:input", async (request,reponse)=>{
     const search = request.params.input;
-    console.log(search)
+   
     const collection = await Collection.findAll({
         where : {
             name : {[Op.like]: "%"+search+"%"}
         }
     })
-    .catch(error=>{console.log(error)});
-    reponse.json(collection);
+    .catch(error=>{
+        console.log(error)
+        reponse.status(500).json("an error has occured")
+    });
+
+    if(collection){
+        reponse.status(200).json(collection);
+    }else{
+        reponse.status(400).json("an error has occured")
+    }
 });
 
 
@@ -43,8 +68,16 @@ collectionRouter.get("/category/:categoryId" , async (request,reponse)=>{
             CategoryId : categoryId
         }
     })
-    .catch(error=>{console.log(error)});
-    reponse.status(200).json(collection);
+    .catch(error=>{
+        console.log(error)
+        reponse.status(500).json("an error has occured")
+    });
+
+    if(collection){
+        reponse.status(200).json(collection);
+    }else{
+        reponse.status(400).json("an error has occured")
+    }
 })
 
 
@@ -56,7 +89,10 @@ collectionRouter.post("/", async (request,reponse)=>{
         name : bodyCollection.name,
         description : bodyCollection.description
     })
-    .catch(error=>{console.log(error)});
+    .catch(error=>{
+        console.log(error)
+        reponse.status(500).json("an error has occured")
+    });
 
     reponse.status(200).json(collection)
 });
@@ -66,15 +102,15 @@ collectionRouter.post("/", async (request,reponse)=>{
 collectionRouter.delete("/:id", async (request,reponse)=>{
     const collectionId = request.params.id;
 
-    const collection = await Collection.findByPk(collectionId)
-    .catch(error=>{console.log(error)});
-
     await Collection.destroy({
         where : {
             id : collectionId
         }
     })
-    .catch(error=>{console.log(error)});
+    .catch(error=>{
+        console.log(error)
+        reponse.status(500).json("an error has occured")
+    });
 
     reponse.status(200).json("collection has been deleted");
 })
@@ -84,17 +120,24 @@ collectionRouter.put("/", async (request,reponse)=>{
     const modification = request.body;
 
     const collection = await Collection.findByPk(modification.id)
-    .catch(error =>{console.log(error)});
+    .catch(error=>{
+        console.log(error)
+        reponse.status(500).json("an error has occured")
+    });
 
     collection.name = modification.name;
     collection.description = modification.description;
-    
-    await collection.save()
-    
-    .catch(error=>{console.log(error)});
-
-    reponse.status(200).json({
-        message : "product has been modified",
-        data : collection
-    })
+    if(collection){
+        await collection.save()
+        .catch(error=>{
+            console.log(error)
+            reponse.status(500).json("an error has occured")
+        });
+        reponse.status(200).json({
+            message : "product has been modified",
+            data : collection
+        })
+    }else{
+        reponse.status(400).json("an error has occured")
+    }
 })
