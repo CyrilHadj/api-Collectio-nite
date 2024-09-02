@@ -3,9 +3,9 @@ const sequelize = require(".");
 
 
 const User = require("./User");
-const Collection = require("./Collection");
+const Communaute = require("./Communaute");
 
-const Interaction_collection = sequelize.define("Interaction_user_collection",{
+const Interaction_communaute = sequelize.define("Interaction_user_communaute",{
     like : {
         type : DataTypes.BOOLEAN,
         allowNull : true,
@@ -20,10 +20,10 @@ const Interaction_collection = sequelize.define("Interaction_user_collection",{
     },
 })
 
-User.hasMany(Interaction_collection);
-Interaction_collection.belongsTo(User);
+User.hasMany(Interaction_communaute);
+Interaction_communaute.belongsTo(User);
 
-Collection.hasMany(Interaction_collection);
-Interaction_collection.belongsTo(Collection);
+Communaute.hasMany(Interaction_communaute);
+Interaction_communaute.belongsTo(Communaute);
 
-module.exports = Interaction_collection;
+module.exports = Interaction_communaute;

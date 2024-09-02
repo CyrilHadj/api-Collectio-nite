@@ -10,31 +10,76 @@ const Category = require("../databases/Category");
 //POST collection item
 exports.itemRouter.post("/collection/:collectionID", async (request, reponse) => {
     const body = request.body;
-    const collection = await Collection.findByPk(request.params.collectionID);
-    const item = await Item.create(body);
-    await item.addCollection(collection);
-    reponse.status(200).json("Item has been add to collection");
+    const collection = await Collection.findByPk(request.params.collectionID)
+        .catch(error => {
+        console.log(error);
+        reponse.status(500).json("an error has occured");
+    });
+    const item = await Item.create(body)
+        .catch(error => {
+        console.log(error);
+        reponse.status(500).json("an error has occured");
+    });
+    await item.addCollection(collection)
+        .catch(error => {
+        console.log(error);
+        reponse.status(500).json("an error has occured");
+    });
+    if (collection) {
+        reponse.status(200).json("Item has been add to collection");
+    }
+    else {
+        reponse.status(404).json("collection not found");
+    }
 });
 //GET Item by collection
 exports.itemRouter.get("/all/collection/:collectionId", async (request, reponse) => {
     const collectionId = request.params.collectionId;
     const collection = await Collection.findByPk(collectionId)
-        .catch(error => { console.log(error); });
-    const items = await collection.getItems();
-    reponse.status(200).json(items);
+        .catch(error => {
+        console.log(error);
+        reponse.status(500).json("an error has occured");
+    });
+    const items = await collection.getItems()
+        .catch(error => {
+        console.log(error);
+        reponse.status(500).json("an error has occured");
+    });
+    if (collection) {
+        reponse.status(200).json(items);
+    }
+    else {
+        reponse.status(404).json("collection not found");
+    }
 });
 //GET Items
 exports.itemRouter.get("/all", async (request, reponse) => {
     const items = await Item.findAll()
-        .catch(error => { console.log(error); });
-    reponse.status(200).json(items);
+        .catch(error => {
+        console.log(error);
+        reponse.status(500).json("an error has occured");
+    });
+    if (items) {
+        reponse.status(200).json(items);
+    }
+    else {
+        reponse.status(404).json("Items not found");
+    }
 });
 //GET Item by id
 exports.itemRouter.get("/:id", async (request, reponse) => {
     const itemId = request.params.id;
     const item = await Item.findByPk(itemId)
-        .catch(error => { console.log(error); });
-    reponse.status(200).json(item);
+        .catch(error => {
+        console.log(error);
+        reponse.status(500).json("an error has occured");
+    });
+    if (item) {
+        reponse.status(200).json(item);
+    }
+    else {
+        reponse.status(404).json("Item not found");
+    }
 });
 //DELETE Item
 exports.itemRouter.delete("/:id", async (request, reponse) => {
@@ -44,7 +89,10 @@ exports.itemRouter.delete("/:id", async (request, reponse) => {
             id: itemId
         }
     })
-        .catch(error => { console.log(error); });
+        .catch(error => {
+        console.log(error);
+        reponse.status(500).json("an error has occured");
+    });
     reponse.status(200).json("Item has been deleted");
 });
 //POST item 
@@ -53,31 +101,71 @@ exports.itemRouter.post("/", async (request, reponse) => {
     const item = await Item.create({
         name: itemBody.name
     })
-        .catch(error => { console.log(error); });
+        .catch(error => {
+        console.log(error);
+        reponse.status(500).json("an error has occured");
+    });
     reponse.status(200).json(item);
 });
 //UPDATE Item
 exports.itemRouter.put("/", async (request, reponse) => {
     const modification = request.body;
     const item = await Item.findByPk(modification.id)
-        .catch(error => { console.log(error); });
+        .catch(error => {
+        console.log(error);
+        reponse.status(500).json("an error has occured");
+    });
     item.name = modification.name;
-    await item.save()
-        .catch(error => { console.log(error); });
-    reponse.status(200).json("item has been modified");
+    if (item) {
+        await item.save()
+            .catch(error => {
+            console.log(error);
+            reponse.status(500).json("an error has occured");
+        });
+        reponse.status(200).json("item has been modified");
+    }
+    else {
+        reponse.status(404).json("item not found");
+    }
 });
 //Post Item Category
 exports.itemRouter.post("/category", async (request, reponse) => {
     const body = request.body;
-    const item = await Item.findByPk(body.itemId);
-    const category = await Category.findByPk(body.CategoryId);
-    item.addCategory(category);
-    reponse.status(200).json("category has been had");
+    const item = await Item.findByPk(body.itemId)
+        .catch(error => {
+        console.log(error);
+        reponse.status(500).json("an error has occured");
+    });
+    const category = await Category.findByPk(body.CategoryId)
+        .catch(error => {
+        console.log(error);
+        reponse.status(500).json("an error has occured");
+    });
+    if (item && category) {
+        item.addCategory(category);
+        reponse.status(200).json("category has been had");
+    }
+    else {
+        reponse.status(404).json("Cannot post item category");
+    }
 });
 //GET Item by category
 exports.itemRouter.get("/category/:categoryId", async (request, reponse) => {
     const categoryId = request.params.categoryId;
-    const category = await Category.findByPk(categoryId);
-    const item = await category.getItems();
-    reponse.status(200).json(item);
+    const category = await Category.findByPk(categoryId)
+        .catch(error => {
+        console.log(error);
+        reponse.status(500).json("an error has occured");
+    });
+    const item = await category.getItems()
+        .catch(error => {
+        console.log(error);
+        reponse.status(500).json("an error has occured");
+    });
+    if (item) {
+        reponse.status(200).json(item);
+    }
+    else {
+        reponse.status(404).json("cannot find item");
+    }
 });

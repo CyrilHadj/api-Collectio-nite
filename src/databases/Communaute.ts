@@ -3,7 +3,7 @@ const sequelize = require(".");
 
 const User = require("./User");
 
-const Communauté = sequelize.define("Communauté",{
+const Communaute = sequelize.define("Communaute",{
     name : {
         type : DataTypes.STRING,
         allowNull : false,
@@ -18,8 +18,8 @@ const Communauté = sequelize.define("Communauté",{
     }
 })
 
-Communauté.belongsToMany(User, {through : "item-collection"});
-User.belongsToMany(Communauté, {through : "item-collection"});
+Communaute.belongsToMany(User, {through : "item-collection"});
+User.belongsToMany(Communaute, {through : "item-collection"});
 
 
-module.exports = Communauté;
+module.exports = Communaute;
