@@ -5,8 +5,11 @@ const express = require("express");
 const bcrypt = require("bcrypt");
 exports.userRouter = express.Router();
 const User = require("../databases/User");
-//User
-//GET USERS
+const interactCaracteristique = require("../databases/Interaction_user_caracteristique");
+const interactCollection = require("../databases/Interaction_user_collection");
+const interactItem = require("../databases/Interaction_user_item");
+const interactCommunaute = require("../databases/Interaction_user_communaute");
+//Crud User
 exports.userRouter.get("/all", async (request, reponse) => {
     const users = await User.findAll()
         .catch(error => {
@@ -20,7 +23,6 @@ exports.userRouter.get("/all", async (request, reponse) => {
         reponse.status(404).json("cannot find users");
     }
 });
-//GET user by id
 exports.userRouter.get("/:id", async (request, reponse) => {
     const user = await User.findByPk(request.params.id)
         .catch(error => {
@@ -34,7 +36,6 @@ exports.userRouter.get("/:id", async (request, reponse) => {
         reponse.status(404).json("cannot find user");
     }
 });
-//Post User SignUp
 exports.userRouter.post("/signup", async (request, reponse) => {
     const signUpForm = request.body;
     const user = await User.create({
@@ -48,7 +49,6 @@ exports.userRouter.post("/signup", async (request, reponse) => {
     });
     reponse.status(200).json(user);
 });
-//Post User SignIn
 exports.userRouter.post("/signin", async (request, reponse) => {
     const signInForm = request.body;
     const user = await User.findOne({
@@ -72,7 +72,6 @@ exports.userRouter.post("/signin", async (request, reponse) => {
         reponse.status(401).json("Identifiant invalid");
     }
 });
-//UPDATE User
 exports.userRouter.put("/", async (request, reponse) => {
     const modification = request.body;
     const user = await User.findByPk(modification.id)
@@ -94,4 +93,65 @@ exports.userRouter.put("/", async (request, reponse) => {
     else {
         reponse.status(404).json("cannot find user");
     }
+});
+//Interaction
+exports.userRouter.post("/interaction/caracteristique", async (request, reponse) => {
+    const post = request.body;
+    const interactionItem = interactItem.create({
+        like: post.like,
+        dislike: post.dislike,
+        post: post.post,
+        UserId: post.UserId,
+        CaracteristiqueId: post.CaracteristiqueId
+    })
+        .catch(error => {
+        console.log(error);
+        reponse.status(500).json("an error has occured");
+    });
+    reponse.status(200).json(interactionItem);
+});
+exports.userRouter.post("/interaction/collection", async (request, reponse) => {
+    const post = request.body;
+    const interactionCollection = interactCollection.create({
+        like: post.like,
+        dislike: post.dislike,
+        post: post.post,
+        UserId: post.UserId,
+        CollectionId: post.CollectionId
+    })
+        .catch(error => {
+        console.log(error);
+        reponse.status(500).json("an error has occured");
+    });
+    reponse.status(200).json(interactionCollection);
+});
+exports.userRouter.post("/interaction/item", async (request, reponse) => {
+    const post = request.body;
+    const interactionItem = interactItem.create({
+        like: post.like,
+        dislike: post.dislike,
+        post: post.post,
+        UserId: post.UserId,
+        ItemId: post.ItemId
+    })
+        .catch(error => {
+        console.log(error);
+        reponse.status(500).json("an error has occured");
+    });
+    reponse.status(200).json(interactionItem);
+});
+exports.userRouter.post("/interaction/communaute", async (request, reponse) => {
+    const post = request.body;
+    const interactionCommunaute = interactCommunaute.create({
+        like: post.like,
+        dislike: post.dislike,
+        post: post.post,
+        UserId: post.UserId,
+        CommunauteId: post.CommunauteId
+    })
+        .catch(error => {
+        console.log(error);
+        reponse.status(500).json("an error has occured");
+    });
+    reponse.status(200).json(interactionCommunaute);
 });
