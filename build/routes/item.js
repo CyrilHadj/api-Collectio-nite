@@ -15,12 +15,14 @@ exports.itemRouter.post("/collection/:collectionID", async (request, reponse) =>
         console.log(error);
         reponse.status(500).json("an error has occured");
     });
-    const item = await Item.create(body)
+    const item = await Item.create({
+        name: body.name
+    })
         .catch(error => {
         console.log(error);
         reponse.status(500).json("an error has occured");
     });
-    await item.addCollection(collection)
+    await item.addCollections(collection)
         .catch(error => {
         console.log(error);
         reponse.status(500).json("an error has occured");
@@ -142,7 +144,7 @@ exports.itemRouter.post("/category", async (request, reponse) => {
         reponse.status(500).json("an error has occured");
     });
     if (item && category) {
-        item.addCategory(category);
+        await category.addItems(item);
         reponse.status(200).json("category has been had");
     }
     else {

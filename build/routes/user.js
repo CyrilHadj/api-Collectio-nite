@@ -95,9 +95,10 @@ exports.userRouter.put("/", async (request, reponse) => {
     }
 });
 //Interaction
+//caracteristique
 exports.userRouter.post("/interaction/caracteristique", async (request, reponse) => {
     const post = request.body;
-    const interactionItem = interactItem.create({
+    const interactionItem = interactCaracteristique.create({
         like: post.like,
         dislike: post.dislike,
         post: post.post,
@@ -108,8 +109,43 @@ exports.userRouter.post("/interaction/caracteristique", async (request, reponse)
         console.log(error);
         reponse.status(500).json("an error has occured");
     });
-    reponse.status(200).json(interactionItem);
+    reponse.status(200).json("Interaction has been had");
 });
+exports.userRouter.put("/interaction/caracteristique", async (request, reponse) => {
+    const modification = request.body;
+    const post = await interactCaracteristique.findByPk(modification.postId)
+        .catch(error => {
+        console.log(error);
+        reponse.status(500).json("an error has occured");
+    });
+    post.like = modification.like;
+    post.dislike = modification.dislike;
+    post.post = modification.post;
+    if (post) {
+        await post.save()
+            .catch(error => {
+            console.log(error);
+            reponse.status(500).json("an error has occured");
+        });
+        reponse.status(200).json("Post has been modified");
+    }
+    else {
+        reponse.status(404).json("cannot find post");
+    }
+});
+exports.userRouter.delete("/interaction/caracteristique/:id", async (request, reponse) => {
+    const postId = request.params.id;
+    interactCaracteristique.destroy({
+        where: {
+            id: postId
+        }
+    }).catch(error => {
+        console.log(error);
+        reponse.status(500).json("an error has occured");
+    });
+    reponse.status(200).json("Post has been deleted");
+});
+//collection
 exports.userRouter.post("/interaction/collection", async (request, reponse) => {
     const post = request.body;
     const interactionCollection = interactCollection.create({
@@ -123,8 +159,43 @@ exports.userRouter.post("/interaction/collection", async (request, reponse) => {
         console.log(error);
         reponse.status(500).json("an error has occured");
     });
-    reponse.status(200).json(interactionCollection);
+    reponse.status(200).json("Interaction has been had");
 });
+exports.userRouter.put("/interaction/collection/:id", async (request, reponse) => {
+    const modification = request.body;
+    const post = await interactCollection.findByPk(modification.postId)
+        .catch(error => {
+        console.log(error);
+        reponse.status(500).json("an error has occured");
+    });
+    post.like = modification.like;
+    post.dislike = modification.dislike;
+    post.post = modification.post;
+    if (post) {
+        await post.save()
+            .catch(error => {
+            console.log(error);
+            reponse.status(500).json("an error has occured");
+        });
+        reponse.status(200).json("Post has been modified");
+    }
+    else {
+        reponse.status(404).json("cannot find post");
+    }
+});
+exports.userRouter.delete("/interaction/collection/:id", async (request, reponse) => {
+    const postId = request.params.id;
+    interactCollection.destroy({
+        where: {
+            id: postId
+        }
+    }).catch(error => {
+        console.log(error);
+        reponse.status(500).json("an error has occured");
+    });
+    reponse.status(200).json("Post has been deleted");
+});
+//item
 exports.userRouter.post("/interaction/item", async (request, reponse) => {
     const post = request.body;
     const interactionItem = interactItem.create({
@@ -138,8 +209,43 @@ exports.userRouter.post("/interaction/item", async (request, reponse) => {
         console.log(error);
         reponse.status(500).json("an error has occured");
     });
-    reponse.status(200).json(interactionItem);
+    reponse.status(200).json("Interaction has been had");
 });
+exports.userRouter.put("/interaction/item/:id", async (request, reponse) => {
+    const modification = request.body;
+    const post = await interactItem.findByPk(modification.postId)
+        .catch(error => {
+        console.log(error);
+        reponse.status(500).json("an error has occured");
+    });
+    post.like = modification.like;
+    post.dislike = modification.dislike;
+    post.post = modification.post;
+    if (post) {
+        await post.save()
+            .catch(error => {
+            console.log(error);
+            reponse.status(500).json("an error has occured");
+        });
+        reponse.status(200).json("Post has been modified");
+    }
+    else {
+        reponse.status(404).json("cannot find post");
+    }
+});
+exports.userRouter.delete("/interaction/item/:id", async (request, reponse) => {
+    const postId = request.params.id;
+    interactItem.destroy({
+        where: {
+            id: postId
+        }
+    }).catch(error => {
+        console.log(error);
+        reponse.status(500).json("an error has occured");
+    });
+    reponse.status(200).json("Post has been deleted");
+});
+//communauté
 exports.userRouter.post("/interaction/communaute", async (request, reponse) => {
     const post = request.body;
     const interactionCommunaute = interactCommunaute.create({
@@ -153,5 +259,39 @@ exports.userRouter.post("/interaction/communaute", async (request, reponse) => {
         console.log(error);
         reponse.status(500).json("an error has occured");
     });
-    reponse.status(200).json(interactionCommunaute);
+    reponse.status(200).json("Interaction has been had");
+});
+exports.userRouter.put("/interaction/communaute/:id", async (request, reponse) => {
+    const modification = request.body;
+    const post = await interactCommunaute.findByPk(modification.postId)
+        .catch(error => {
+        console.log(error);
+        reponse.status(500).json("an error has occured");
+    });
+    post.like = modification.like;
+    post.dislike = modification.dislike;
+    post.post = modification.post;
+    if (post) {
+        await post.save()
+            .catch(error => {
+            console.log(error);
+            reponse.status(500).json("an error has occured");
+        });
+        reponse.status(200).json("Post has been modified");
+    }
+    else {
+        reponse.status(404).json("cannot find post");
+    }
+});
+exports.userRouter.delete("/interaction/communaute/:id", async (request, reponse) => {
+    const postId = request.params.id;
+    interactCommunaute.destroy({
+        where: {
+            id: postId
+        }
+    }).catch(error => {
+        console.log(error);
+        reponse.status(500).json("an error has occured");
+    });
+    reponse.status(200).json("Post has been deleted");
 });
