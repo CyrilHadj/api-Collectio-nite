@@ -28,7 +28,7 @@ exports.itemRouter.post("/collection/:collectionID", async (request, reponse) =>
         reponse.status(500).json("an error has occured");
     });
     if (collection) {
-        reponse.status(200).json("Item has been add to collection");
+        reponse.status(200).json(item);
     }
     else {
         reponse.status(404).json("collection not found");

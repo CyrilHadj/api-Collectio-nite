@@ -11,14 +11,6 @@ const Image = sequelize.define("Image",{
         type : DataTypes.STRING,
         allowNull : false
     },
-    description : {
-        type : DataTypes.STRING,
-        allowNull : false
-    },
-    auteur : {
-        type : DataTypes.STRING,
-        allowNull : false
-    }
 })
 
 Image.hasMany(Collection);

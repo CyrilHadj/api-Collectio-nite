@@ -79,7 +79,9 @@ exports.imageRouter.post("/item", async (request, reponse) => {
         console.log(error);
         reponse.status(500).json("an error has occured");
     });
-    const image = await Image.findByPk(body.imageId)
+    const image = await Image.create({
+        url: body.url,
+    })
         .catch(error => {
         console.log(error);
         reponse.status(500).json("an error has occured");
@@ -117,7 +119,9 @@ exports.imageRouter.post("/collection", async (request, reponse) => {
         console.log(error);
         reponse.status(500).json("an error has occured");
     });
-    const image = await Image.findByPk(body.imageId)
+    const image = await Image.create({
+        url: body.url,
+    })
         .catch(error => {
         console.log(error);
         reponse.status(500).json("an error has occured");

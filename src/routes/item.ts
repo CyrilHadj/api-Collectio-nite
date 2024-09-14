@@ -1,4 +1,4 @@
-import { json, Op } from "sequelize";
+import { json, Op, where } from "sequelize";
 
 const express = require("express");
 
@@ -16,22 +16,27 @@ itemRouter.post("/collection/:collectionID", async (request, reponse) => {
     .catch(error=>{
         console.log(error)
         reponse.status(500).json("an error has occured")
+     
     });
 
-    const item = await Item.create(body)
+    const item = await Item.create({
+        name : body.name
+    })
     .catch(error=>{
         console.log(error)
         reponse.status(500).json("an error has occured")
+    
     });
-
-    await item.addCollection(collection)
+   
+    await item.addCollections(collection)
     .catch(error=>{
         console.log(error)
         reponse.status(500).json("an error has occured")
+        
     });
 
     if(collection){
-        reponse.status(200).json("Item has been add to collection");
+        reponse.status(200).json(item);
     }else{
         reponse.status(404).json("collection not found");
     }
@@ -167,7 +172,7 @@ itemRouter.post("/category", async (request,reponse)=>{
     });
     
     if(item && category){
-        item.addCategory(category);
+        await category.addItems(item);
         reponse.status(200).json("category has been had");
     }else{
         reponse.status(404).json("Cannot post item category")
