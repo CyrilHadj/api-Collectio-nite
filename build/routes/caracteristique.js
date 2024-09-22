@@ -4,43 +4,47 @@ exports.caracteristiqueRouter = void 0;
 const express = require("express");
 exports.caracteristiqueRouter = express.Router();
 const Caracteristique = require("../databases/Caracteristique");
-exports.caracteristiqueRouter.get("/all", async (request, reponse) => {
-    const caracteristique = await Caracteristique.findAll()
+const Model = require("../databases/Model");
+// get content by model
+exports.caracteristiqueRouter.get("/all/model/:modelId", async (request, reponse) => {
+    const modelId = request.params.modelId;
+    const model = await Model.findByPk(modelId)
         .catch(error => {
         console.log(error);
         reponse.status(500).json("an error has occured");
     });
-    if (caracteristique) {
-        reponse.status(200).json(caracteristique);
-    }
-    else {
-        reponse.status(400).json("cannot get all caracteristique");
-    }
-    ;
-});
-exports.caracteristiqueRouter.get("/:id", async (request, reponse) => {
-    const caracteristique = await Caracteristique.findByPk(request.params.id)
+    const caracteristique = await model.getCaracteristiques()
         .catch(error => {
         console.log(error);
         reponse.status(500).json("an error has occured");
     });
-    if (caracteristique) {
+    if (model) {
         reponse.status(200).json(caracteristique);
     }
     else {
-        reponse.status(404).json("cannot find caracteristique");
+        reponse.status(404).json("collection not found");
     }
 });
-exports.caracteristiqueRouter.post("/", async (request, reponse) => {
+//post caracteristique to model
+exports.caracteristiqueRouter.post("/model", async (request, reponse) => {
     const body = request.body;
-    const caracteristique = await Caracteristique.create({
-        name: body.name
-    })
-        .catch(error => {
-        console.log(error);
-        reponse.status(500).json("an error has occured");
-    });
-    reponse.status(200).json(caracteristique);
+    try {
+        console.log(body);
+        const model = await Model.findByPk(body.modelId);
+        if (!model) {
+            return reponse.status(404).json("Model not found");
+        }
+        const caracteristique = await Caracteristique.create({
+            title: body.title,
+            subtitle: body.subtitle
+        });
+        await caracteristique.addModel(model.id);
+        reponse.status(200).json(model);
+    }
+    catch (error) {
+        console.error("An error occurred:", error);
+        return reponse.status(500).json("An error has occurred");
+    }
 });
 exports.caracteristiqueRouter.delete("/:id", async (request, reponse) => {
     const id = request.params.id;
@@ -62,7 +66,9 @@ exports.caracteristiqueRouter.put("/", async (request, reponse) => {
         console.log(error);
         reponse.status(500).json("an error has occured");
     });
-    caracteristique.name = modification.name;
+    console.log(modification);
+    caracteristique.title = modification.title;
+    caracteristique.subtitle = modification.subtitle;
     if (caracteristique) {
         await caracteristique.save()
             .catch(error => {

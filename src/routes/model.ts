@@ -5,6 +5,9 @@ const express = require("express");
 export const modelRouter = express.Router();
 
 const Model = require("../databases/Model");
+const Item = require("../databases/Item");
+const Caracteristique = require("../databases/Caracteristique");
+const Image = require("../databases/Image");
 
 
 modelRouter.get("/all",async (request, reponse)=>{
@@ -31,7 +34,7 @@ modelRouter.get("/:id", async (request,reponse)=>{
     });
 
     if(model){
-        reponse.status(200).json(Model)
+        reponse.status(200).json(model)
     }else{
         reponse.status(404).json("cannot find model")
     }
@@ -91,4 +94,109 @@ modelRouter.put("/",async (request,reponse)=>{
         reponse.status(404).json("an error has occured")
     }
 
+});
+
+// post model to item
+modelRouter.post("/item", async (request, reponse) => {
+    const body = request.body;
+    try{
+    const item = await Item.findByPk(body.itemId)
+    .catch(error=>{
+        console.log(error)
+        return reponse.status(500).json("an error has occured")
+    });
+
+    if (!item) {
+        return reponse.status(404).json("Item not found");
+    }
+
+    const model = await Model.create({
+        name : body.name,
+    })
+    .catch(error=>{
+        console.log(error)
+        return reponse.status(500).json("an error has occured while creating the model")
+    });
+   
+    if(model.name == "content"){
+        const caracteristique = await Caracteristique.create({
+            title : "Titre",
+            subtitle :"Sous-titre"
+        })
+        await model.addCaracteristiques(caracteristique)
+    };
+
+    await item.addModel(model.id)
+    .catch(error=>{
+        console.log(error)
+        return reponse.status(500).json("an error has occured")
+    });
+        reponse.status(200).json(model);
+    }
+    catch(error){
+        return reponse.status(500).json("An error has occurred");
+    }
+  
+});
+
+modelRouter.get("/item/:itemId", async (request,reponse)=>{
+
+    const item = await Item.findByPk(request.params.itemId)
+    .catch(error=>{
+        console.log(error)
+        reponse.status(500).json("an error has occured")
+    });
+    
+    const models = await item.getModels()
+
+    if(models){
+        reponse.status(200).json(models)
+    }else{
+        reponse.status(404).json("cannot find model")
+    }
+});
+
+
+modelRouter.get("/images/:modelId", async (request,reponse)=>{
+    const modelId = request.params.modelId;
+
+    const model = await Model.findByPk(modelId)
+    .catch(error=>{
+        console.log(error)
+        reponse.status(500).json("an error has occured")
+    });
+
+    const image = await model.getImages()
+    .catch(error=>{
+        console.log(error)
+        reponse.status(500).json("an error has occured")
+    });
+    if(image){
+        reponse.status(200).json(image);
+    }else{
+        reponse.status(404).json("no image")
+    }
+});
+
+modelRouter.post("/image", async (request, reponse) => {
+    const body = request.body;
+    try{
+    const model = await Model.findByPk(body.modelId)
+
+    if (!model) {
+        return reponse.status(404).json("Model not found");
+    }
+
+    const image = await Image.create({
+       url : body.url
+    })
+
+    await image.addModel(model.id)
+
+        reponse.status(200).json(model);
+    }
+    catch(error){
+        return reponse.status(500).json("An error has occurred");
+    }
+  
 });

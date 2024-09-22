@@ -6,6 +6,8 @@ exports.itemRouter = express.Router();
 const Item = require("../databases/Item");
 const Collection = require("../databases/Collection");
 const Category = require("../databases/Category");
+const Model = require("../databases/Model");
+const Caracteristique = require("../databases/Caracteristique");
 //Item
 //POST collection item
 exports.itemRouter.post("/collection/:collectionID", async (request, reponse) => {
@@ -27,6 +29,23 @@ exports.itemRouter.post("/collection/:collectionID", async (request, reponse) =>
         console.log(error);
         reponse.status(500).json("an error has occured");
     });
+    const imageSliderModel = await Model.create({
+        name: "image-slider",
+    });
+    const contentModel = await Model.create({
+        name: "content",
+    });
+    const chekListModel = await Model.create({
+        name: "check-list",
+    });
+    const caracteristique = await Caracteristique.create({
+        title: "Titre",
+        subtitle: "Sous-titre"
+    });
+    await contentModel.addCaracteristiques(caracteristique);
+    await item.addModel(imageSliderModel);
+    await item.addModel(contentModel);
+    await item.addModel(chekListModel);
     if (collection) {
         reponse.status(200).json(item);
     }
@@ -86,6 +105,13 @@ exports.itemRouter.get("/:id", async (request, reponse) => {
 //DELETE Item
 exports.itemRouter.delete("/:id", async (request, reponse) => {
     const itemId = request.params.id;
+    const item = await Item.findByPk(itemId);
+    const models = await item.getModels();
+    await Model.destroy({
+        where: {
+            id: [models[0].id, models[1].id, models[2].id,]
+        }
+    });
     await Item.destroy({
         where: {
             id: itemId

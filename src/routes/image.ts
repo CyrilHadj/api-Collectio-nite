@@ -188,3 +188,15 @@ imageRouter.get("/collection/:collectionId", async (request, reponse) => {
     }   
 });
 
+imageRouter.delete("/:id", async (request,reponse)=>{
+    const imageId = request.params.id
+
+    Image.destroy({
+        where : {id : imageId}
+    })
+    .catch(error=>{
+        console.log(error)
+    })
+
+    reponse.status(200).json("Image has been deleted");
+})

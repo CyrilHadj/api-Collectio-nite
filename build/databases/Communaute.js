@@ -17,6 +17,6 @@ const Communaute = sequelize.define("Communaute", {
         allowNull: false,
     }
 });
-Communaute.belongsToMany(User, { through: "item-communaute" });
-User.belongsToMany(Communaute, { through: "item-communaute" });
+Communaute.belongsToMany(User, { through: "user-communaute" });
+User.belongsToMany(Communaute, { through: "user-communaute" });
 module.exports = Communaute;

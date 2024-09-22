@@ -27,7 +27,11 @@ const {caracteristiqueRouter} = require("./routes/caracteristique");
 const {communauteRouter} = require("./routes/communaute");
 const {modelRouter} = require("./routes/model");
 const {roleRouter} = require("./routes/role");
+const {taskRouter} = require("./routes/task")
+const {contentRouter} = require("./routes/content")
 
+app.use("/content", contentRouter)
+app.use("/task", taskRouter)
 app.use("/role", roleRouter);
 app.use("/model", modelRouter);
 app.use("/communaute", communauteRouter);
