@@ -8,21 +8,21 @@ const Item = require("./Item");
 const Interaction_item = sequelize.define("Interaction_user_item",{
     like : {
         type : DataTypes.BOOLEAN,
-        allowNull : false,
+        allowNull : true,
     },
     dislike : {
         type : DataTypes.BOOLEAN,
-        allowNull : false,
+        allowNull : true,
     },
     post : {
         type : DataTypes.STRING,
-        allowNull : false,
+        allowNull : true,
     },
 })
-Interaction_item.hasMany(User);
-User.belongsTo(Interaction_item);
+User.hasMany(Interaction_item);
+Interaction_item.belongsTo(User);
 
-Interaction_item.hasMany(Item);
-Item.belongsTo(Interaction_item);
+Item.hasMany(Interaction_item);
+Interaction_item.belongsTo(Item);
 
 module.exports = Interaction_item;

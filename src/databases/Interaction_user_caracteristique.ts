@@ -8,22 +8,22 @@ const Caracteristique = require("./Caracteristique");
 const Interaction_caracteristique = sequelize.define("Interaction_user_caracteristique",{
     like : {
         type : DataTypes.BOOLEAN,
-        allowNull : false,
+        allowNull : true,
     },
     dislike : {
         type : DataTypes.BOOLEAN,
-        allowNull : false,
+        allowNull : true,
     },
     post : {
         type : DataTypes.STRING,
-        allowNull : false,
+        allowNull : true,
     },
 })
 
-Interaction_caracteristique.hasMany(User);
-User.belongsTo(Interaction_caracteristique);
+User.hasMany(Interaction_caracteristique);
+Interaction_caracteristique.belongsTo(User);
 
-Interaction_caracteristique.hasMany(Caracteristique);
-Caracteristique.belongsTo(Interaction_caracteristique);
+Caracteristique.hasMany(Interaction_caracteristique);
+Interaction_caracteristique.belongsTo(Caracteristique);
 
 module.exports = Interaction_caracteristique;

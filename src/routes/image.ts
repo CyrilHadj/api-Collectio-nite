@@ -101,7 +101,9 @@ imageRouter.post("/item", async (request, reponse) => {
         reponse.status(500).json("an error has occured")
     });
 
-    const image = await Image.findByPk(body.imageId)
+    const image = await Image.create({
+        url : body.url,
+    })
     .catch(error=>{
         console.log(error)
         reponse.status(500).json("an error has occured")
@@ -148,7 +150,9 @@ imageRouter.post("/collection", async (request, reponse) => {
         reponse.status(500).json("an error has occured")
     });
 
-    const image = await Image.findByPk(body.imageId)
+    const image = await Image.create({
+        url : body.url,
+    })
     .catch(error=>{
         console.log(error)
         reponse.status(500).json("an error has occured")
@@ -171,7 +175,7 @@ imageRouter.get("/collection/:collectionId", async (request, reponse) => {
         console.log(error)
         reponse.status(500).json("an error has occured")
     });
-
+  
     const image = await Image.findByPk(collection.ImageId)
     .catch(error=>{
         console.log(error)
@@ -184,3 +188,15 @@ imageRouter.get("/collection/:collectionId", async (request, reponse) => {
     }   
 });
 
+imageRouter.delete("/:id", async (request,reponse)=>{
+    const imageId = request.params.id
+
+    Image.destroy({
+        where : {id : imageId}
+    })
+    .catch(error=>{
+        console.log(error)
+    })
+
+    reponse.status(200).json("Image has been deleted");
+})
