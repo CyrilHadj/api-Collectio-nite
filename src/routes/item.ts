@@ -3,14 +3,13 @@ import { json, Op, where } from "sequelize";
 const express = require("express");
 
 export const itemRouter = express.Router();
+const checkJwt = require("../middleware/checkjwt")
 const Item = require("../databases/Item");
 const Collection = require("../databases/Collection");
 const Category = require("../databases/Category");
 const Model = require("../databases/Model");
 const Caracteristique = require("../databases/Caracteristique");
 
-//Item
-//POST collection item
 itemRouter.post("/collection/:collectionID", async (request, reponse) => {
     const body = request.body;
     
@@ -103,7 +102,7 @@ itemRouter.get("/all", async (request,reponse)=>{
 });
 
 //GET Item by id
-itemRouter.get("/:id",async (request,reponse)=>{
+itemRouter.get("/:id",checkJwt(1) ,async (request,reponse)=>{
     const itemId = request.params.id;
 
     const item = await Item.findByPk(itemId)

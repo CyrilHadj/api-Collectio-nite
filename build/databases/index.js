@@ -15,7 +15,7 @@ exports.sequelize = new sequelize_1.Sequelize(login.database, login.username, lo
     logging: false
 });
 exports.sequelize.authenticate()
-    .then(() => {
+    .then(async () => {
     console.log("Connexion a la base de donnée réussi");
 })
     .catch(error => console.log(error));

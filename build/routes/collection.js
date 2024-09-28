@@ -3,8 +3,10 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.collectionRouter = void 0;
 const sequelize_1 = require("sequelize");
 const express = require("express");
+const checkJwt = require("../middleware/checkjwt");
 exports.collectionRouter = express.Router();
 const Collection = require("../databases/Collection");
+const User = require("../databases/User");
 exports.collectionRouter.get("/all", async (request, reponse) => {
     const collections = await Collection.findAll()
         .catch(error => {
@@ -65,6 +67,35 @@ exports.collectionRouter.get("/category/:categoryId", async (request, reponse) =
     }
     else {
         reponse.status(400).json("an error has occured");
+    }
+});
+exports.collectionRouter.post("/user", async (request, reponse) => {
+    const body = request.body;
+    console.log(body);
+    try {
+        const user = await User.findByPk(request.body.userId);
+        const collection = await Collection.create({
+            name: body.name,
+            description: body.description
+        });
+        await user.addCollection(collection);
+        reponse.status(200).json(collection);
+    }
+    catch (error) {
+        console.log(error);
+        return reponse.status(500).json({ error: "An error has occurred" });
+    }
+});
+exports.collectionRouter.get("/user/:userId", async (request, reponse) => {
+    const body = request.body;
+    try {
+        const user = await User.findByPk(request.params.userId);
+        const collection = await user.getCollections();
+        reponse.status(200).json(collection);
+    }
+    catch (error) {
+        console.log(error);
+        return reponse.status(500).json({ error: "An error has occurred" });
     }
 });
 exports.collectionRouter.post("/", async (request, reponse) => {

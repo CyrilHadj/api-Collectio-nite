@@ -1,9 +1,10 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.Role = void 0;
 const { DataTypes } = require("sequelize");
 const sequelize = require(".");
 const User = require("./User");
-const Role = sequelize.define("Role", {
+exports.Role = sequelize.define("Role", {
     name: {
         type: DataTypes.STRING,
         allowNull: false,
@@ -13,6 +14,6 @@ const Role = sequelize.define("Role", {
         allowNull: false,
     }
 });
-Role.hasOne(User);
-User.belongsTo(Role);
-module.exports = Role;
+exports.Role.hasOne(User);
+User.belongsTo(exports.Role);
+module.exports = exports.Role;

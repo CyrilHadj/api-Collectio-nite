@@ -1,21 +1,14 @@
-
 const sequelize = require("./databases");
 const {Op} = require("sequelize");
-
 const express = require("express");
 const app = express();
-
 const cors = require("cors");
-
-
 app.use(cors());
 app.use(express.json());
-
 const interactCaracteristique = require("./databases/Interaction_user_caracteristique");
 const interactCollection = require("./databases/Interaction_user_collection");
 const interactCommunaute = require("./databases/Interaction_user_communaute");
 const interactItem = require("./databases/Interaction_user_item");
-
 
 const {collectionRouter} = require("./routes/collection");
 const {categoryRouter} = require("./routes/category");

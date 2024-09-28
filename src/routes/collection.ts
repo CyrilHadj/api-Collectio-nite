@@ -1,10 +1,10 @@
-import { json, Op } from "sequelize";
+import { DataTypes, json, Op } from "sequelize";
 
 const express = require("express");
-
+const checkJwt = require("../middleware/checkjwt")
 export const collectionRouter = express.Router();
 const Collection = require("../databases/Collection");
-
+const User = require("../databases/User");
 
 
 collectionRouter.get("/all", async (request, reponse)=>{
@@ -77,6 +77,42 @@ collectionRouter.get("/category/:categoryId" , async (request,reponse)=>{
         reponse.status(200).json(collection);
     }else{
         reponse.status(400).json("an error has occured")
+    }
+})
+
+collectionRouter.post("/user", async (request,reponse)=>{
+    const body = request.body;
+    console.log(body)
+    try{
+        const user = await User.findByPk(request.body.userId)
+        
+        const collection = await Collection.create({
+            name : body.name,
+            description : body.description
+        })
+
+        await user.addCollection(collection)
+
+        reponse.status(200).json(collection)
+
+    }catch(error){
+        console.log(error);
+        return reponse.status(500).json({ error: "An error has occurred" });
+    }
+})
+
+collectionRouter.get("/user/:userId", async (request,reponse)=>{
+    const body = request.body;
+    try{
+        const user = await User.findByPk(request.params.userId)
+
+        const collection = await user.getCollections()
+
+        reponse.status(200).json(collection)
+
+    }catch(error){
+        console.log(error);
+        return reponse.status(500).json({ error: "An error has occurred" });
     }
 })
 

@@ -70,6 +70,34 @@ imageRouter.post("/user", async (request,reponse)=>{
 });
 
 
+imageRouter.put("/item", async (request, response) => {
+    const { itemId, imageId, url } = request.body;
+  
+    try {
+
+      const item = await Item.findByPk(itemId);
+      const image = await Image.findByPk(imageId);
+  
+      if (!item || !image) {
+        return response.status(404).json({ error: "Item or Image not found" });
+      }
+  
+      
+      const isAssociated = await item.hasImage(image);
+      if (!isAssociated) {
+        return response.status(400).json({ error: "Image is not associated with this item" });
+      }
+  
+
+      await image.update({ url });
+  
+      return response.status(200).json({ message: "Image updated successfully" });
+    } catch (error) {
+      console.error(error);
+      return response.status(500).json({ error: "An error occurred" });
+    }
+  });
+
 imageRouter.get("/:userId", async (request,reponse)=>{
     const userId = request.params.userId;
 

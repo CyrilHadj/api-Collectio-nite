@@ -3,7 +3,7 @@ const sequelize = require(".");
 
 const User = require("./User");
 
-const Role = sequelize.define("Role",{
+export const Role = sequelize.define("Role",{
     name : {
         type : DataTypes.STRING,
         allowNull : false,
