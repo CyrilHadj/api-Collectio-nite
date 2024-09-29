@@ -6,8 +6,9 @@ export const taskRouter = express.Router();
 
 const Task = require("../databases/Task");
 const Model = require("../databases/Model");
+const checkJwt = require("../middleware/checkjwt")
 
-taskRouter.get("/all",async (request, reponse)=>{
+taskRouter.get("/all",checkJwt(1),async (request, reponse)=>{
 
     const task = await Task.findAll()
     .catch(error=>{
@@ -22,7 +23,7 @@ taskRouter.get("/all",async (request, reponse)=>{
     };
 });
 
-taskRouter.get("/:id", async (request,reponse)=>{
+taskRouter.get("/:id",checkJwt(1), async (request,reponse)=>{
 
     const task = await  Task.findByPk(request.params.id)
     .catch(error=>{
@@ -38,7 +39,7 @@ taskRouter.get("/:id", async (request,reponse)=>{
 });
 
 // post task to model
-taskRouter.post("/model", async (request, reponse) => {
+taskRouter.post("/model",checkJwt(1), async (request, reponse) => {
     const body = request.body;
     try{
     const model = await Model.findByPk(body.modelId)
@@ -64,7 +65,7 @@ taskRouter.post("/model", async (request, reponse) => {
 
 // get task by model
 
-taskRouter.get("/all/model/:modelId", async (request, reponse) => {
+taskRouter.get("/all/model/:modelId",checkJwt(1), async (request, reponse) => {
     const modelId = request.params.modelId;
     
     const model = await Model.findByPk(modelId)
@@ -86,7 +87,7 @@ taskRouter.get("/all/model/:modelId", async (request, reponse) => {
     }
 });
 
-taskRouter.put("/",async (request,reponse)=>{
+taskRouter.put("/",checkJwt(1),async (request,reponse)=>{
     const modification = request.body;
 
     const task = await Task.findByPk(modification.id)
@@ -112,7 +113,7 @@ taskRouter.put("/",async (request,reponse)=>{
 
 });
 
-taskRouter.delete("/:id", async (request,reponse)=>{
+taskRouter.delete("/:id",checkJwt(1), async (request,reponse)=>{
     const id = request.params.id;
 
     Task.destroy({

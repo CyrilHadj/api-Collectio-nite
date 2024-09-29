@@ -3,14 +3,14 @@ import { json, Op } from "sequelize";
 const express = require("express");
 
 export const modelRouter = express.Router();
-
+const checkJwt = require("../middleware/checkjwt")
 const Model = require("../databases/Model");
 const Item = require("../databases/Item");
 const Caracteristique = require("../databases/Caracteristique");
 const Image = require("../databases/Image");
 
 
-modelRouter.get("/all",async (request, reponse)=>{
+modelRouter.get("/all",checkJwt(1),async (request, reponse)=>{
 
     const model = await Model.findAll()
     .catch(error=>{
@@ -25,7 +25,7 @@ modelRouter.get("/all",async (request, reponse)=>{
     };
 });
 
-modelRouter.get("/:id", async (request,reponse)=>{
+modelRouter.get("/:id",checkJwt(1), async (request,reponse)=>{
 
     const model = await  Model.findByPk(request.params.id)
     .catch(error=>{
@@ -40,7 +40,7 @@ modelRouter.get("/:id", async (request,reponse)=>{
     }
 });
 
-modelRouter.post("/", async (request,reponse)=>{
+modelRouter.post("/",checkJwt(1), async (request,reponse)=>{
 
     const body = request.body;
 
@@ -55,7 +55,7 @@ modelRouter.post("/", async (request,reponse)=>{
     reponse.status(200).json(model);
 });
 
-modelRouter.delete("/:id", async (request,reponse)=>{
+modelRouter.delete("/:id",checkJwt(1), async (request,reponse)=>{
     const id = request.params.id;
 
     Model.destroy({
@@ -71,7 +71,7 @@ modelRouter.delete("/:id", async (request,reponse)=>{
 });
 
 
-modelRouter.put("/",async (request,reponse)=>{
+modelRouter.put("/",checkJwt(1),async (request,reponse)=>{
     const modification = request.body;
 
     const model = await Model.findByPk(modification.id)
@@ -97,7 +97,7 @@ modelRouter.put("/",async (request,reponse)=>{
 });
 
 // post model to item
-modelRouter.post("/item", async (request, reponse) => {
+modelRouter.post("/item",checkJwt(1), async (request, reponse) => {
     const body = request.body;
     try{
     const item = await Item.findByPk(body.itemId)
@@ -139,7 +139,7 @@ modelRouter.post("/item", async (request, reponse) => {
   
 });
 
-modelRouter.get("/item/:itemId", async (request,reponse)=>{
+modelRouter.get("/item/:itemId",checkJwt(1), async (request,reponse)=>{
 
     const item = await Item.findByPk(request.params.itemId)
     .catch(error=>{
@@ -157,7 +157,7 @@ modelRouter.get("/item/:itemId", async (request,reponse)=>{
 });
 
 
-modelRouter.get("/images/:modelId", async (request,reponse)=>{
+modelRouter.get("/images/:modelId",checkJwt(1), async (request,reponse)=>{
     const modelId = request.params.modelId;
 
     const model = await Model.findByPk(modelId)
@@ -178,7 +178,7 @@ modelRouter.get("/images/:modelId", async (request,reponse)=>{
     }
 });
 
-modelRouter.post("/image", async (request, reponse) => {
+modelRouter.post("/image",checkJwt(1), async (request, reponse) => {
     const body = request.body;
     try{
     const model = await Model.findByPk(body.modelId)

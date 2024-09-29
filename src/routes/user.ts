@@ -143,7 +143,7 @@ userRouter.post("/signin", async (request,reponse)=>{
         const importance = (await user.getRole()).importance;
         const secret = await readFile("secret.txt",{encoding : "utf8"});
         const playload = {id : user.id,name : user.name, importance : importance};
-        const newToken = jwt.sign(playload,secret,{expiresIn : "3h", algorithm : "HS256"});
+        const newToken = jwt.sign(playload,secret,{expiresIn : "2h", algorithm : "HS256"});
     
         return reponse.status(200).json({token : newToken});
 
@@ -194,7 +194,7 @@ userRouter.put("/", checkJwt(1) ,  async (request,reponse)=>{
 //Interaction
 
 //caracteristique
-userRouter.post("/interaction/caracteristique" , async (request,reponse)=>{
+userRouter.post("/interaction/caracteristique" ,checkJwt(1), async (request,reponse)=>{
 
     const post = request.body;
 
@@ -240,7 +240,7 @@ userRouter.put("/interaction/caracteristique", async (request,reponse)=>{
 
 })
 
-userRouter.delete("/interaction/caracteristique/:id", async (request,reponse)=>{
+userRouter.delete("/interaction/caracteristique/:id",checkJwt(1), async (request,reponse)=>{
     const postId = request.params.id;
 
     interactCaracteristique.destroy({
@@ -257,7 +257,7 @@ userRouter.delete("/interaction/caracteristique/:id", async (request,reponse)=>{
 });
 
 //collection
-userRouter.post("/interaction/collection" , async (request,reponse)=>{
+userRouter.post("/interaction/collection" ,checkJwt(1), async (request,reponse)=>{
 
     const post = request.body;
 
@@ -276,7 +276,7 @@ userRouter.post("/interaction/collection" , async (request,reponse)=>{
     reponse.status(200).json("Interaction has been had");
 })
 
-userRouter.put("/interaction/collection/:id", async (request,reponse)=>{
+userRouter.put("/interaction/collection/:id",checkJwt(1), async (request,reponse)=>{
     const modification = request.body
 
     const post = await interactCollection.findByPk(modification.postId)
@@ -303,7 +303,7 @@ userRouter.put("/interaction/collection/:id", async (request,reponse)=>{
 
 });
 
-userRouter.delete("/interaction/collection/:id", async (request,reponse)=>{
+userRouter.delete("/interaction/collection/:id",checkJwt(1), async (request,reponse)=>{
     const postId = request.params.id;
 
     interactCollection.destroy({
@@ -320,7 +320,7 @@ userRouter.delete("/interaction/collection/:id", async (request,reponse)=>{
 });
 
 //item
-userRouter.post("/interaction/item" , async (request,reponse)=>{
+userRouter.post("/interaction/item" , checkJwt(1),async (request,reponse)=>{
 
     const post = request.body;
 
@@ -339,7 +339,7 @@ userRouter.post("/interaction/item" , async (request,reponse)=>{
     reponse.status(200).json("Interaction has been had");
 });
 
-userRouter.put("/interaction/item/:id", async (request,reponse)=>{
+userRouter.put("/interaction/item/:id",checkJwt(1), async (request,reponse)=>{
     const modification = request.body
 
     const post = await interactItem.findByPk(modification.postId)
@@ -366,7 +366,7 @@ userRouter.put("/interaction/item/:id", async (request,reponse)=>{
 
 });
 
-userRouter.delete("/interaction/item/:id", async (request,reponse)=>{
+userRouter.delete("/interaction/item/:id",checkJwt(1), async (request,reponse)=>{
     const postId = request.params.id;
 
     interactItem.destroy({
@@ -384,7 +384,7 @@ userRouter.delete("/interaction/item/:id", async (request,reponse)=>{
 
 //communauté
 
-userRouter.post("/interaction/communaute" , async (request,reponse)=>{
+userRouter.post("/interaction/communaute",checkJwt(1), async (request,reponse)=>{
 
     const post = request.body;
 
@@ -403,7 +403,7 @@ userRouter.post("/interaction/communaute" , async (request,reponse)=>{
     reponse.status(200).json("Interaction has been had");
 });
 
-userRouter.put("/interaction/communaute/:id", async (request,reponse)=>{
+userRouter.put("/interaction/communaute/:id",checkJwt(1), async (request,reponse)=>{
     const modification = request.body
 
     const post = await interactCommunaute.findByPk(modification.postId)
@@ -430,7 +430,7 @@ userRouter.put("/interaction/communaute/:id", async (request,reponse)=>{
 
 });
 
-userRouter.delete("/interaction/communaute/:id", async (request,reponse)=>{
+userRouter.delete("/interaction/communaute/:id",checkJwt(1), async (request,reponse)=>{
     const postId = request.params.id;
 
     interactCommunaute.destroy({
@@ -446,7 +446,7 @@ userRouter.delete("/interaction/communaute/:id", async (request,reponse)=>{
 
 });
 
-userRouter.post("/image", async (request,reponse)=>{
+userRouter.post("/image", checkJwt(1),async (request,reponse)=>{
     const body = request.body
     try{
         const user = await User.findByPk(body.userId)
@@ -469,7 +469,7 @@ userRouter.post("/image", async (request,reponse)=>{
     }
 })
 
-userRouter.get("/image/:userId", async (request,reponse)=>{
+userRouter.get("/image/:userId",checkJwt(1), async (request,reponse)=>{
     const userId = request.params.userId
     try{
         console.log(userId)
@@ -491,7 +491,7 @@ userRouter.get("/image/:userId", async (request,reponse)=>{
 
 
 
-userRouter.post("/category", async (request,reponse)=>{
+userRouter.post("/category",checkJwt(1), async (request,reponse)=>{
     const body = request.body
 
     try{
@@ -510,7 +510,7 @@ userRouter.post("/category", async (request,reponse)=>{
     }
 })
 
-userRouter.get("/category/:userId", async (request,reponse)=>{
+userRouter.get("/category/:userId",checkJwt(1), async (request,reponse)=>{
     const userId = request.params.userId
     try{
 

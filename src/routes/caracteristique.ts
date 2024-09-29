@@ -8,7 +8,7 @@ const Caracteristique = require("../databases/Caracteristique");
 const Model = require("../databases/Model");
 
 // get content by model
-caracteristiqueRouter.get("/all/model/:modelId", async (request, reponse) => {
+caracteristiqueRouter.get("/all/model/:modelId",checkJwt(1), async (request, reponse) => {
     const modelId = request.params.modelId;
     
     const model = await Model.findByPk(modelId)
@@ -30,7 +30,7 @@ caracteristiqueRouter.get("/all/model/:modelId", async (request, reponse) => {
     }
 });
 //post caracteristique to model
-caracteristiqueRouter.post("/model", async (request, reponse) => {
+caracteristiqueRouter.post("/model",checkJwt(1), async (request, reponse) => {
     const body = request.body;
     try{
         console.log(body)
@@ -56,7 +56,7 @@ caracteristiqueRouter.post("/model", async (request, reponse) => {
   
 });
 
-caracteristiqueRouter.delete("/:id", async (request,reponse)=>{
+caracteristiqueRouter.delete("/:id",checkJwt(1), async (request,reponse)=>{
     const id = request.params.id;
 
     Caracteristique.destroy({
@@ -72,7 +72,7 @@ caracteristiqueRouter.delete("/:id", async (request,reponse)=>{
 });
 
 
-caracteristiqueRouter.put("/",async (request,reponse)=>{
+caracteristiqueRouter.put("/",checkJwt(1),async (request,reponse)=>{
     const modification = request.body;
 
     const caracteristique = await Caracteristique.findByPk(modification.id)

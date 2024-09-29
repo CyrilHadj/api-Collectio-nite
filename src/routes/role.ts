@@ -3,11 +3,11 @@ import { json, Op } from "sequelize";
 const express = require("express");
 
 export const roleRouter = express.Router();
-
+const checkJwt = require("../middleware/checkjwt")
 const   Role = require("../databases/Role");
 
 
-roleRouter.get("/all",async (request, reponse)=>{
+roleRouter.get("/all",checkJwt(1),async (request, reponse)=>{
 
     const model = await Role.findAll()
     .catch(error=>{
@@ -22,7 +22,7 @@ roleRouter.get("/all",async (request, reponse)=>{
     };
 });
 
-roleRouter.get("/:id", async (request,reponse)=>{
+roleRouter.get("/:id",checkJwt(1), async (request,reponse)=>{
 
     const model = await  Role.findByPk(request.params.id)
     .catch(error=>{
@@ -37,7 +37,7 @@ roleRouter.get("/:id", async (request,reponse)=>{
     }
 });
 
-roleRouter.post("/", async (request,reponse)=>{
+roleRouter.post("/",checkJwt(1), async (request,reponse)=>{
 
     const body = request.body;
 
@@ -53,7 +53,7 @@ roleRouter.post("/", async (request,reponse)=>{
     reponse.status(200).json(role);
 });
 
-roleRouter.delete("/:id", async (request,reponse)=>{
+roleRouter.delete("/:id",checkJwt(1), async (request,reponse)=>{
     const id = request.params.id;
 
     Role.destroy({
@@ -69,7 +69,7 @@ roleRouter.delete("/:id", async (request,reponse)=>{
 });
 
 
-roleRouter.put("/",async (request,reponse)=>{
+roleRouter.put("/",checkJwt(1),async (request,reponse)=>{
     const modification = request.body;
 
     const role = await Role.findByPk(modification.id)

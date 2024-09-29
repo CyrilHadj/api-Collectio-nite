@@ -3,7 +3,7 @@ import { json, Op } from "sequelize";
 const express = require("express");
 
 export const imageRouter = express.Router();
-
+const checkJwt = require("../middleware/checkjwt")
 const Item = require("../databases/Item");
 const Collection = require("../databases/Collection");
 const Image = require("../databases/Image");
@@ -11,7 +11,7 @@ const User = require("../databases/User");
 
 
 
-imageRouter.get("/:id", async (request,reponse)=>{
+imageRouter.get("/:id",checkJwt(1), async (request,reponse)=>{
     const imageId = request.params.id;
 
     const image = await Image.findByPk(imageId)
@@ -28,7 +28,7 @@ imageRouter.get("/:id", async (request,reponse)=>{
 });
 
 
-imageRouter.post("/", async (request,reponse)=>{
+imageRouter.post("/",checkJwt(1), async (request,reponse)=>{
     const imageBody = request.body;
 
     const image = await Image.create({
@@ -45,7 +45,7 @@ imageRouter.post("/", async (request,reponse)=>{
 });
 
 
-imageRouter.post("/user", async (request,reponse)=>{
+imageRouter.post("/user",checkJwt(1), async (request,reponse)=>{
     const body = request.body;
  
     const user = await User.findByPk(body.userId)
@@ -70,7 +70,7 @@ imageRouter.post("/user", async (request,reponse)=>{
 });
 
 
-imageRouter.put("/item", async (request, response) => {
+imageRouter.put("/item",checkJwt(1), async (request, response) => {
     const { itemId, imageId, url } = request.body;
   
     try {
@@ -98,7 +98,7 @@ imageRouter.put("/item", async (request, response) => {
     }
   });
 
-imageRouter.get("/:userId", async (request,reponse)=>{
+imageRouter.get("/:userId",checkJwt(1), async (request,reponse)=>{
     const userId = request.params.userId;
 
     const user = await User.findByPk(userId)
@@ -120,7 +120,7 @@ imageRouter.get("/:userId", async (request,reponse)=>{
 });
 
 
-imageRouter.post("/item", async (request, reponse) => {
+imageRouter.post("/item",checkJwt(1), async (request, reponse) => {
     const body = request.body;
 
     const item = await Item.findByPk(body.itemId)
@@ -147,7 +147,7 @@ imageRouter.post("/item", async (request, reponse) => {
 });
 
 
-imageRouter.get("/item/:itemId", async (request, reponse) => {
+imageRouter.get("/item/:itemId",checkJwt(1), async (request, reponse) => {
     const itemId = request.params.itemId;
     
     const item = await Item.findByPk(itemId)
@@ -169,7 +169,7 @@ imageRouter.get("/item/:itemId", async (request, reponse) => {
 });
 
 
-imageRouter.post("/collection", async (request, reponse) => {
+imageRouter.post("/collection",checkJwt(1), async (request, reponse) => {
     const body = request.body;
 
     const collection = await Collection.findByPk(body.collectionId)
@@ -195,7 +195,7 @@ imageRouter.post("/collection", async (request, reponse) => {
 });
 
 
-imageRouter.get("/collection/:collectionId", async (request, reponse) => {
+imageRouter.get("/collection/:collectionId",checkJwt(1), async (request, reponse) => {
     const collectionId = request.params.collectionId;
     
     const collection = await Collection.findByPk(collectionId)
@@ -216,7 +216,7 @@ imageRouter.get("/collection/:collectionId", async (request, reponse) => {
     }   
 });
 
-imageRouter.delete("/:id", async (request,reponse)=>{
+imageRouter.delete("/:id",checkJwt(1), async (request,reponse)=>{
     const imageId = request.params.id
 
     Image.destroy({

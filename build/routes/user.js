@@ -116,7 +116,7 @@ exports.userRouter.post("/signin", async (request, reponse) => {
         const importance = (await user.getRole()).importance;
         const secret = await readFile("secret.txt", { encoding: "utf8" });
         const playload = { id: user.id, name: user.name, importance: importance };
-        const newToken = jwt.sign(playload, secret, { expiresIn: "3h", algorithm: "HS256" });
+        const newToken = jwt.sign(playload, secret, { expiresIn: "2h", algorithm: "HS256" });
         return reponse.status(200).json({ token: newToken });
     }
     catch (error) {

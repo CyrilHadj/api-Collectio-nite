@@ -3,11 +3,11 @@ import { json, Op } from "sequelize";
 const express = require("express");
 
 export const achievementRouter = express.Router();
-
+const checkJwt = require("../middleware/checkjwt")
 const Achievement = require("../databases/Achievement");
 
 
-achievementRouter.get("/all",async (request, reponse)=>{
+achievementRouter.get("/all",checkJwt(1),async (request, reponse)=>{
 
     const achievements = await Achievement.findAll()
     .catch(error=>{
@@ -22,7 +22,7 @@ achievementRouter.get("/all",async (request, reponse)=>{
     };
 });
 
-achievementRouter.get("/:id", async (request,reponse)=>{
+achievementRouter.get("/:id",checkJwt(1), async (request,reponse)=>{
 
     const achievement = await  Achievement.findByPk(request.params.id)
     .catch(error=>{
@@ -37,7 +37,7 @@ achievementRouter.get("/:id", async (request,reponse)=>{
     }
 });
 
-achievementRouter.post("/", async (request,reponse)=>{
+achievementRouter.post("/",checkJwt(1), async (request,reponse)=>{
 
     const body = request.body;
 
@@ -53,7 +53,7 @@ achievementRouter.post("/", async (request,reponse)=>{
     reponse.status(200).json(achievement);
 });
 
-achievementRouter.delete("/:id", async (request,reponse)=>{
+achievementRouter.delete("/:id",checkJwt(1), async (request,reponse)=>{
     const id = request.params.id;
 
     Achievement.destroy({
@@ -69,7 +69,7 @@ achievementRouter.delete("/:id", async (request,reponse)=>{
 });
 
 
-achievementRouter.put("/",async (request,reponse)=>{
+achievementRouter.put("/",checkJwt(1),async (request,reponse)=>{
     const modification = request.body;
 
     const achievement = await Achievement.findByPk(modification.id)

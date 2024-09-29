@@ -7,7 +7,7 @@ export const categoryRouter = express.Router();
 const Category = require("../databases/Category");
 
 
-categoryRouter.get("/all",async (request, reponse)=>{
+categoryRouter.get("/all",checkJwt(1),async (request, reponse)=>{
 
     const categories = await Category.findAll()
     .catch(error=>{
@@ -24,7 +24,7 @@ categoryRouter.get("/all",async (request, reponse)=>{
 
 
 
-categoryRouter.get("/:id", async (request,reponse)=>{
+categoryRouter.get("/:id",checkJwt(1), async (request,reponse)=>{
 
     const category = await Category.findByPk(request.params.id)
     .catch(error=>{
@@ -41,7 +41,7 @@ categoryRouter.get("/:id", async (request,reponse)=>{
 
 
 
-categoryRouter.get("/search/:input", async (request,reponse)=>{
+categoryRouter.get("/search/:input",checkJwt(1), async (request,reponse)=>{
 
     const search = request.params.input;
 
@@ -64,7 +64,7 @@ categoryRouter.get("/search/:input", async (request,reponse)=>{
 
 
 
-categoryRouter.post("/", async (request,reponse)=>{
+categoryRouter.post("/",checkJwt(1), async (request,reponse)=>{
 
     const bodyCategory = request.body;
 
@@ -80,7 +80,7 @@ categoryRouter.post("/", async (request,reponse)=>{
 });
 
 
-categoryRouter.delete("/:id", async (request,reponse)=>{
+categoryRouter.delete("/:id",checkJwt(1), async (request,reponse)=>{
     const categoryId = request.params.id;
     Category.destroy({
         where : {
@@ -95,7 +95,7 @@ categoryRouter.delete("/:id", async (request,reponse)=>{
 });
 
 
-categoryRouter.put("/",async (request,reponse)=>{
+categoryRouter.put("/",checkJwt(1),async (request,reponse)=>{
     const modification = request.body;
 
     const category = await Category.findByPk(modification.id)
