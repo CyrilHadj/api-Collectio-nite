@@ -5,7 +5,8 @@ const sequelize_1 = require("sequelize");
 const express = require("express");
 exports.categoryRouter = express.Router();
 const Category = require("../databases/Category");
-exports.categoryRouter.get("/all", async (request, reponse) => {
+const checkJwt = require("../middleware/checkjwt");
+exports.categoryRouter.get("/all", checkJwt(1), async (request, reponse) => {
     const categories = await Category.findAll()
         .catch(error => {
         console.log(error);
@@ -19,7 +20,7 @@ exports.categoryRouter.get("/all", async (request, reponse) => {
     }
     ;
 });
-exports.categoryRouter.get("/:id", async (request, reponse) => {
+exports.categoryRouter.get("/:id", checkJwt(1), async (request, reponse) => {
     const category = await Category.findByPk(request.params.id)
         .catch(error => {
         console.log(error);
@@ -32,7 +33,7 @@ exports.categoryRouter.get("/:id", async (request, reponse) => {
         reponse.status(404).json("cannot find category");
     }
 });
-exports.categoryRouter.get("/search/:input", async (request, reponse) => {
+exports.categoryRouter.get("/search/:input", checkJwt(1), async (request, reponse) => {
     const search = request.params.input;
     const category = await Category.findAll({
         where: {
@@ -50,7 +51,7 @@ exports.categoryRouter.get("/search/:input", async (request, reponse) => {
         reponse.status(404).json("cannot find category");
     }
 });
-exports.categoryRouter.post("/", async (request, reponse) => {
+exports.categoryRouter.post("/", checkJwt(1), async (request, reponse) => {
     const bodyCategory = request.body;
     const category = await Category.create({
         name: bodyCategory.name
@@ -61,7 +62,7 @@ exports.categoryRouter.post("/", async (request, reponse) => {
     });
     reponse.status(200).json(category);
 });
-exports.categoryRouter.delete("/:id", async (request, reponse) => {
+exports.categoryRouter.delete("/:id", checkJwt(1), async (request, reponse) => {
     const categoryId = request.params.id;
     Category.destroy({
         where: {
@@ -74,7 +75,7 @@ exports.categoryRouter.delete("/:id", async (request, reponse) => {
     });
     reponse.status(200).json("Category has been deleted");
 });
-exports.categoryRouter.put("/", async (request, reponse) => {
+exports.categoryRouter.put("/", checkJwt(1), async (request, reponse) => {
     const modification = request.body;
     const category = await Category.findByPk(modification.id)
         .catch(error => {

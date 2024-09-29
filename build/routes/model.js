@@ -3,11 +3,12 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.modelRouter = void 0;
 const express = require("express");
 exports.modelRouter = express.Router();
+const checkJwt = require("../middleware/checkjwt");
 const Model = require("../databases/Model");
 const Item = require("../databases/Item");
 const Caracteristique = require("../databases/Caracteristique");
 const Image = require("../databases/Image");
-exports.modelRouter.get("/all", async (request, reponse) => {
+exports.modelRouter.get("/all", checkJwt(1), async (request, reponse) => {
     const model = await Model.findAll()
         .catch(error => {
         console.log(error);
@@ -21,7 +22,7 @@ exports.modelRouter.get("/all", async (request, reponse) => {
     }
     ;
 });
-exports.modelRouter.get("/:id", async (request, reponse) => {
+exports.modelRouter.get("/:id", checkJwt(1), async (request, reponse) => {
     const model = await Model.findByPk(request.params.id)
         .catch(error => {
         console.log(error);
@@ -34,7 +35,7 @@ exports.modelRouter.get("/:id", async (request, reponse) => {
         reponse.status(404).json("cannot find model");
     }
 });
-exports.modelRouter.post("/", async (request, reponse) => {
+exports.modelRouter.post("/", checkJwt(1), async (request, reponse) => {
     const body = request.body;
     const model = await Model.create({
         name: body.name,
@@ -45,7 +46,7 @@ exports.modelRouter.post("/", async (request, reponse) => {
     });
     reponse.status(200).json(model);
 });
-exports.modelRouter.delete("/:id", async (request, reponse) => {
+exports.modelRouter.delete("/:id", checkJwt(1), async (request, reponse) => {
     const id = request.params.id;
     Model.destroy({
         where: {
@@ -58,7 +59,7 @@ exports.modelRouter.delete("/:id", async (request, reponse) => {
     });
     reponse.status(200).json("model has been deleted");
 });
-exports.modelRouter.put("/", async (request, reponse) => {
+exports.modelRouter.put("/", checkJwt(1), async (request, reponse) => {
     const modification = request.body;
     const model = await Model.findByPk(modification.id)
         .catch(error => {
@@ -79,7 +80,7 @@ exports.modelRouter.put("/", async (request, reponse) => {
     }
 });
 // post model to item
-exports.modelRouter.post("/item", async (request, reponse) => {
+exports.modelRouter.post("/item", checkJwt(1), async (request, reponse) => {
     const body = request.body;
     try {
         const item = await Item.findByPk(body.itemId)
@@ -116,7 +117,7 @@ exports.modelRouter.post("/item", async (request, reponse) => {
         return reponse.status(500).json("An error has occurred");
     }
 });
-exports.modelRouter.get("/item/:itemId", async (request, reponse) => {
+exports.modelRouter.get("/item/:itemId", checkJwt(1), async (request, reponse) => {
     const item = await Item.findByPk(request.params.itemId)
         .catch(error => {
         console.log(error);
@@ -130,7 +131,7 @@ exports.modelRouter.get("/item/:itemId", async (request, reponse) => {
         reponse.status(404).json("cannot find model");
     }
 });
-exports.modelRouter.get("/images/:modelId", async (request, reponse) => {
+exports.modelRouter.get("/images/:modelId", checkJwt(1), async (request, reponse) => {
     const modelId = request.params.modelId;
     const model = await Model.findByPk(modelId)
         .catch(error => {
@@ -149,7 +150,7 @@ exports.modelRouter.get("/images/:modelId", async (request, reponse) => {
         reponse.status(404).json("no image");
     }
 });
-exports.modelRouter.post("/image", async (request, reponse) => {
+exports.modelRouter.post("/image", checkJwt(1), async (request, reponse) => {
     const body = request.body;
     try {
         const model = await Model.findByPk(body.modelId);

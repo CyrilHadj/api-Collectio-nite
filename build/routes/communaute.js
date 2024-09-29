@@ -3,8 +3,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.communauteRouter = void 0;
 const express = require("express");
 exports.communauteRouter = express.Router();
+const checkJwt = require("../middleware/checkjwt");
 const Communaute = require("../databases/Communaute");
-exports.communauteRouter.get("/all", async (request, reponse) => {
+exports.communauteRouter.get("/all", checkJwt(1), async (request, reponse) => {
     const communaute = await Communaute.findAll()
         .catch(error => {
         console.log(error);
@@ -18,7 +19,7 @@ exports.communauteRouter.get("/all", async (request, reponse) => {
     }
     ;
 });
-exports.communauteRouter.get("/:id", async (request, reponse) => {
+exports.communauteRouter.get("/:id", checkJwt(1), async (request, reponse) => {
     const communaute = await Communaute.findByPk(request.params.id)
         .catch(error => {
         console.log(error);
@@ -31,7 +32,7 @@ exports.communauteRouter.get("/:id", async (request, reponse) => {
         reponse.status(404).json("cannot find Communaute");
     }
 });
-exports.communauteRouter.post("/", async (request, reponse) => {
+exports.communauteRouter.post("/", checkJwt(1), async (request, reponse) => {
     const body = request.body;
     const communaute = await Communaute.create({
         name: body.name,
@@ -44,7 +45,7 @@ exports.communauteRouter.post("/", async (request, reponse) => {
     });
     reponse.status(200).json(communaute);
 });
-exports.communauteRouter.delete("/:id", async (request, reponse) => {
+exports.communauteRouter.delete("/:id", checkJwt(1), async (request, reponse) => {
     const id = request.params.id;
     Communaute.destroy({
         where: {
@@ -57,7 +58,7 @@ exports.communauteRouter.delete("/:id", async (request, reponse) => {
     });
     reponse.status(200).json("Communaute has been deleted");
 });
-exports.communauteRouter.put("/", async (request, reponse) => {
+exports.communauteRouter.put("/", checkJwt(1), async (request, reponse) => {
     const modification = request.body;
     const communaute = await Communaute.findByPk(modification.id)
         .catch(error => {

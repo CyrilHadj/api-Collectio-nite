@@ -9,7 +9,7 @@ const Collection = require("../databases/Collection");
 const Category = require("../databases/Category");
 const Model = require("../databases/Model");
 const Caracteristique = require("../databases/Caracteristique");
-exports.itemRouter.post("/collection/:collectionID", async (request, reponse) => {
+exports.itemRouter.post("/collection/:collectionID", checkJwt(1), async (request, reponse) => {
     const body = request.body;
     const collection = await Collection.findByPk(request.params.collectionID)
         .catch(error => {
@@ -53,7 +53,7 @@ exports.itemRouter.post("/collection/:collectionID", async (request, reponse) =>
     }
 });
 //GET Item by collection
-exports.itemRouter.get("/all/collection/:collectionId", async (request, reponse) => {
+exports.itemRouter.get("/all/collection/:collectionId", checkJwt(1), async (request, reponse) => {
     const collectionId = request.params.collectionId;
     const collection = await Collection.findByPk(collectionId)
         .catch(error => {
@@ -73,7 +73,7 @@ exports.itemRouter.get("/all/collection/:collectionId", async (request, reponse)
     }
 });
 //GET Items
-exports.itemRouter.get("/all", async (request, reponse) => {
+exports.itemRouter.get("/all", checkJwt(1), async (request, reponse) => {
     const items = await Item.findAll()
         .catch(error => {
         console.log(error);
@@ -102,7 +102,7 @@ exports.itemRouter.get("/:id", checkJwt(1), async (request, reponse) => {
     }
 });
 //DELETE Item
-exports.itemRouter.delete("/:id", async (request, reponse) => {
+exports.itemRouter.delete("/:id", checkJwt(1), async (request, reponse) => {
     const itemId = request.params.id;
     const item = await Item.findByPk(itemId);
     const models = await item.getModels();
@@ -123,7 +123,7 @@ exports.itemRouter.delete("/:id", async (request, reponse) => {
     reponse.status(200).json("Item has been deleted");
 });
 //POST item 
-exports.itemRouter.post("/", async (request, reponse) => {
+exports.itemRouter.post("/", checkJwt(1), async (request, reponse) => {
     const itemBody = request.body;
     const item = await Item.create({
         name: itemBody.name
@@ -135,7 +135,7 @@ exports.itemRouter.post("/", async (request, reponse) => {
     reponse.status(200).json(item);
 });
 //UPDATE Item
-exports.itemRouter.put("/", async (request, reponse) => {
+exports.itemRouter.put("/", checkJwt(1), async (request, reponse) => {
     const modification = request.body;
     const item = await Item.findByPk(modification.id)
         .catch(error => {
@@ -156,7 +156,7 @@ exports.itemRouter.put("/", async (request, reponse) => {
     }
 });
 //Post Item Category
-exports.itemRouter.post("/category", async (request, reponse) => {
+exports.itemRouter.post("/category", checkJwt(1), async (request, reponse) => {
     const body = request.body;
     const item = await Item.findByPk(body.itemId)
         .catch(error => {
@@ -177,7 +177,7 @@ exports.itemRouter.post("/category", async (request, reponse) => {
     }
 });
 //GET Item by category
-exports.itemRouter.get("/category/:categoryId", async (request, reponse) => {
+exports.itemRouter.get("/category/:categoryId", checkJwt(1), async (request, reponse) => {
     const categoryId = request.params.categoryId;
     const category = await Category.findByPk(categoryId)
         .catch(error => {

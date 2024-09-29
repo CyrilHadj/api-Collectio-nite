@@ -3,11 +3,12 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.imageRouter = void 0;
 const express = require("express");
 exports.imageRouter = express.Router();
+const checkJwt = require("../middleware/checkjwt");
 const Item = require("../databases/Item");
 const Collection = require("../databases/Collection");
 const Image = require("../databases/Image");
 const User = require("../databases/User");
-exports.imageRouter.get("/:id", async (request, reponse) => {
+exports.imageRouter.get("/:id", checkJwt(1), async (request, reponse) => {
     const imageId = request.params.id;
     const image = await Image.findByPk(imageId)
         .catch(error => {
@@ -21,7 +22,7 @@ exports.imageRouter.get("/:id", async (request, reponse) => {
         reponse.status(400).json("an error has occured");
     }
 });
-exports.imageRouter.post("/", async (request, reponse) => {
+exports.imageRouter.post("/", checkJwt(1), async (request, reponse) => {
     const imageBody = request.body;
     const image = await Image.create({
         url: imageBody.url,
@@ -34,7 +35,7 @@ exports.imageRouter.post("/", async (request, reponse) => {
     });
     reponse.status(200).json(image);
 });
-exports.imageRouter.post("/user", async (request, reponse) => {
+exports.imageRouter.post("/user", checkJwt(1), async (request, reponse) => {
     const body = request.body;
     const user = await User.findByPk(body.userId)
         .catch(error => {
@@ -53,7 +54,7 @@ exports.imageRouter.post("/user", async (request, reponse) => {
     });
     reponse.status(200).json("image has been add to user");
 });
-exports.imageRouter.put("/item", async (request, response) => {
+exports.imageRouter.put("/item", checkJwt(1), async (request, response) => {
     const { itemId, imageId, url } = request.body;
     try {
         const item = await Item.findByPk(itemId);
@@ -73,7 +74,7 @@ exports.imageRouter.put("/item", async (request, response) => {
         return response.status(500).json({ error: "An error occurred" });
     }
 });
-exports.imageRouter.get("/:userId", async (request, reponse) => {
+exports.imageRouter.get("/:userId", checkJwt(1), async (request, reponse) => {
     const userId = request.params.userId;
     const user = await User.findByPk(userId)
         .catch(error => {
@@ -92,7 +93,7 @@ exports.imageRouter.get("/:userId", async (request, reponse) => {
         reponse.status(404).json("no image");
     }
 });
-exports.imageRouter.post("/item", async (request, reponse) => {
+exports.imageRouter.post("/item", checkJwt(1), async (request, reponse) => {
     const body = request.body;
     const item = await Item.findByPk(body.itemId)
         .catch(error => {
@@ -113,7 +114,7 @@ exports.imageRouter.post("/item", async (request, reponse) => {
     });
     reponse.status(200).json("image has been add to item");
 });
-exports.imageRouter.get("/item/:itemId", async (request, reponse) => {
+exports.imageRouter.get("/item/:itemId", checkJwt(1), async (request, reponse) => {
     const itemId = request.params.itemId;
     const item = await Item.findByPk(itemId)
         .catch(error => {
@@ -132,7 +133,7 @@ exports.imageRouter.get("/item/:itemId", async (request, reponse) => {
         reponse.status(400).json("no image");
     }
 });
-exports.imageRouter.post("/collection", async (request, reponse) => {
+exports.imageRouter.post("/collection", checkJwt(1), async (request, reponse) => {
     const body = request.body;
     const collection = await Collection.findByPk(body.collectionId)
         .catch(error => {
@@ -153,7 +154,7 @@ exports.imageRouter.post("/collection", async (request, reponse) => {
     });
     reponse.status(200).json("image has been add to collection");
 });
-exports.imageRouter.get("/collection/:collectionId", async (request, reponse) => {
+exports.imageRouter.get("/collection/:collectionId", checkJwt(1), async (request, reponse) => {
     const collectionId = request.params.collectionId;
     const collection = await Collection.findByPk(collectionId)
         .catch(error => {
@@ -172,7 +173,7 @@ exports.imageRouter.get("/collection/:collectionId", async (request, reponse) =>
         reponse.status(400).json("no image");
     }
 });
-exports.imageRouter.delete("/:id", async (request, reponse) => {
+exports.imageRouter.delete("/:id", checkJwt(1), async (request, reponse) => {
     const imageId = request.params.id;
     Image.destroy({
         where: { id: imageId }

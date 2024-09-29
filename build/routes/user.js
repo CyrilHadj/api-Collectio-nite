@@ -150,7 +150,7 @@ exports.userRouter.put("/", checkJwt(1), async (request, reponse) => {
 });
 //Interaction
 //caracteristique
-exports.userRouter.post("/interaction/caracteristique", async (request, reponse) => {
+exports.userRouter.post("/interaction/caracteristique", checkJwt(1), async (request, reponse) => {
     const post = request.body;
     const interactionItem = interactCaracteristique.create({
         like: post.like,
@@ -187,7 +187,7 @@ exports.userRouter.put("/interaction/caracteristique", async (request, reponse) 
         reponse.status(404).json("cannot find post");
     }
 });
-exports.userRouter.delete("/interaction/caracteristique/:id", async (request, reponse) => {
+exports.userRouter.delete("/interaction/caracteristique/:id", checkJwt(1), async (request, reponse) => {
     const postId = request.params.id;
     interactCaracteristique.destroy({
         where: {
@@ -200,7 +200,7 @@ exports.userRouter.delete("/interaction/caracteristique/:id", async (request, re
     reponse.status(200).json("Post has been deleted");
 });
 //collection
-exports.userRouter.post("/interaction/collection", async (request, reponse) => {
+exports.userRouter.post("/interaction/collection", checkJwt(1), async (request, reponse) => {
     const post = request.body;
     const interactionCollection = interactCollection.create({
         like: post.like,
@@ -215,7 +215,7 @@ exports.userRouter.post("/interaction/collection", async (request, reponse) => {
     });
     reponse.status(200).json("Interaction has been had");
 });
-exports.userRouter.put("/interaction/collection/:id", async (request, reponse) => {
+exports.userRouter.put("/interaction/collection/:id", checkJwt(1), async (request, reponse) => {
     const modification = request.body;
     const post = await interactCollection.findByPk(modification.postId)
         .catch(error => {
@@ -237,7 +237,7 @@ exports.userRouter.put("/interaction/collection/:id", async (request, reponse) =
         reponse.status(404).json("cannot find post");
     }
 });
-exports.userRouter.delete("/interaction/collection/:id", async (request, reponse) => {
+exports.userRouter.delete("/interaction/collection/:id", checkJwt(1), async (request, reponse) => {
     const postId = request.params.id;
     interactCollection.destroy({
         where: {
@@ -250,7 +250,7 @@ exports.userRouter.delete("/interaction/collection/:id", async (request, reponse
     reponse.status(200).json("Post has been deleted");
 });
 //item
-exports.userRouter.post("/interaction/item", async (request, reponse) => {
+exports.userRouter.post("/interaction/item", checkJwt(1), async (request, reponse) => {
     const post = request.body;
     const interactionItem = interactItem.create({
         like: post.like,
@@ -265,7 +265,7 @@ exports.userRouter.post("/interaction/item", async (request, reponse) => {
     });
     reponse.status(200).json("Interaction has been had");
 });
-exports.userRouter.put("/interaction/item/:id", async (request, reponse) => {
+exports.userRouter.put("/interaction/item/:id", checkJwt(1), async (request, reponse) => {
     const modification = request.body;
     const post = await interactItem.findByPk(modification.postId)
         .catch(error => {
@@ -287,7 +287,7 @@ exports.userRouter.put("/interaction/item/:id", async (request, reponse) => {
         reponse.status(404).json("cannot find post");
     }
 });
-exports.userRouter.delete("/interaction/item/:id", async (request, reponse) => {
+exports.userRouter.delete("/interaction/item/:id", checkJwt(1), async (request, reponse) => {
     const postId = request.params.id;
     interactItem.destroy({
         where: {
@@ -300,7 +300,7 @@ exports.userRouter.delete("/interaction/item/:id", async (request, reponse) => {
     reponse.status(200).json("Post has been deleted");
 });
 //communauté
-exports.userRouter.post("/interaction/communaute", async (request, reponse) => {
+exports.userRouter.post("/interaction/communaute", checkJwt(1), async (request, reponse) => {
     const post = request.body;
     const interactionCommunaute = interactCommunaute.create({
         like: post.like,
@@ -315,7 +315,7 @@ exports.userRouter.post("/interaction/communaute", async (request, reponse) => {
     });
     reponse.status(200).json("Interaction has been had");
 });
-exports.userRouter.put("/interaction/communaute/:id", async (request, reponse) => {
+exports.userRouter.put("/interaction/communaute/:id", checkJwt(1), async (request, reponse) => {
     const modification = request.body;
     const post = await interactCommunaute.findByPk(modification.postId)
         .catch(error => {
@@ -337,7 +337,7 @@ exports.userRouter.put("/interaction/communaute/:id", async (request, reponse) =
         reponse.status(404).json("cannot find post");
     }
 });
-exports.userRouter.delete("/interaction/communaute/:id", async (request, reponse) => {
+exports.userRouter.delete("/interaction/communaute/:id", checkJwt(1), async (request, reponse) => {
     const postId = request.params.id;
     interactCommunaute.destroy({
         where: {
@@ -349,7 +349,7 @@ exports.userRouter.delete("/interaction/communaute/:id", async (request, reponse
     });
     reponse.status(200).json("Post has been deleted");
 });
-exports.userRouter.post("/image", async (request, reponse) => {
+exports.userRouter.post("/image", checkJwt(1), async (request, reponse) => {
     const body = request.body;
     try {
         const user = await User.findByPk(body.userId);
@@ -367,7 +367,7 @@ exports.userRouter.post("/image", async (request, reponse) => {
         return reponse.status(500).json("An error has occurred");
     }
 });
-exports.userRouter.get("/image/:userId", async (request, reponse) => {
+exports.userRouter.get("/image/:userId", checkJwt(1), async (request, reponse) => {
     const userId = request.params.userId;
     try {
         console.log(userId);
@@ -383,7 +383,7 @@ exports.userRouter.get("/image/:userId", async (request, reponse) => {
         return reponse.status(500).json("An error has occurred");
     }
 });
-exports.userRouter.post("/category", async (request, reponse) => {
+exports.userRouter.post("/category", checkJwt(1), async (request, reponse) => {
     const body = request.body;
     try {
         const user = await User.findByPk(body.userId);
@@ -398,7 +398,7 @@ exports.userRouter.post("/category", async (request, reponse) => {
         return reponse.status(500).json("An error has occurred");
     }
 });
-exports.userRouter.get("/category/:userId", async (request, reponse) => {
+exports.userRouter.get("/category/:userId", checkJwt(1), async (request, reponse) => {
     const userId = request.params.userId;
     try {
         const user = await User.findByPk(userId);
