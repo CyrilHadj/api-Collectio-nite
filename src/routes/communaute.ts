@@ -3,11 +3,11 @@ import { json, Op } from "sequelize";
 const express = require("express");
 
 export const communauteRouter = express.Router();
-
+const checkJwt = require("../middleware/checkjwt")
 const Communaute = require("../databases/Communaute");
 
 
-communauteRouter.get("/all",async (request, reponse)=>{
+communauteRouter.get("/all",checkJwt(1),async (request, reponse)=>{
 
     const communaute = await Communaute.findAll()
     .catch(error=>{
@@ -22,7 +22,7 @@ communauteRouter.get("/all",async (request, reponse)=>{
     };
 });
 
-communauteRouter.get("/:id", async (request,reponse)=>{
+communauteRouter.get("/:id",checkJwt(1), async (request,reponse)=>{
 
     const communaute = await  Communaute.findByPk(request.params.id)
     .catch(error=>{
@@ -37,7 +37,7 @@ communauteRouter.get("/:id", async (request,reponse)=>{
     }
 });
 
-communauteRouter.post("/", async (request,reponse)=>{
+communauteRouter.post("/",checkJwt(1), async (request,reponse)=>{
 
     const body = request.body;
 
@@ -54,7 +54,7 @@ communauteRouter.post("/", async (request,reponse)=>{
     reponse.status(200).json(communaute);
 });
 
-communauteRouter.delete("/:id", async (request,reponse)=>{
+communauteRouter.delete("/:id",checkJwt(1), async (request,reponse)=>{
     const id = request.params.id;
 
     Communaute.destroy({
@@ -70,7 +70,7 @@ communauteRouter.delete("/:id", async (request,reponse)=>{
 });
 
 
-communauteRouter.put("/",async (request,reponse)=>{
+communauteRouter.put("/",checkJwt(1),async (request,reponse)=>{
     const modification = request.body;
 
     const communaute = await Communaute.findByPk(modification.id)

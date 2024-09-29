@@ -3,10 +3,11 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.contentRouter = void 0;
 const express = require("express");
 exports.contentRouter = express.Router();
+const checkJwt = require("../middleware/checkjwt");
 const Content = require("../databases/Content");
 const Model = require("../databases/Model");
 // post content to model
-exports.contentRouter.post("/model", async (request, reponse) => {
+exports.contentRouter.post("/model", checkJwt(1), async (request, reponse) => {
     const body = request.body;
     try {
         const model = await Model.findByPk(body.modelId);
@@ -26,7 +27,7 @@ exports.contentRouter.post("/model", async (request, reponse) => {
     }
 });
 // get content by model
-exports.contentRouter.get("/all/model/:modelId", async (request, reponse) => {
+exports.contentRouter.get("/all/model/:modelId", checkJwt(1), async (request, reponse) => {
     const modelId = request.params.modelId;
     const model = await Model.findByPk(modelId)
         .catch(error => {
@@ -46,7 +47,7 @@ exports.contentRouter.get("/all/model/:modelId", async (request, reponse) => {
     }
 });
 //update
-exports.contentRouter.put("/", async (request, reponse) => {
+exports.contentRouter.put("/", checkJwt(1), async (request, reponse) => {
     const modification = request.body;
     const content = await Content.findByPk(modification.id)
         .catch(error => {
@@ -67,7 +68,7 @@ exports.contentRouter.put("/", async (request, reponse) => {
         reponse.status(404).json("an error has occured");
     }
 });
-exports.contentRouter.delete("/:id", async (request, reponse) => {
+exports.contentRouter.delete("/:id", checkJwt(1), async (request, reponse) => {
     const id = request.params.id;
     Content.destroy({
         where: {

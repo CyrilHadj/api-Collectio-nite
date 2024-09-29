@@ -3,15 +3,14 @@ import { json, Op, where } from "sequelize";
 const express = require("express");
 
 export const itemRouter = express.Router();
+const checkJwt = require("../middleware/checkjwt")
 const Item = require("../databases/Item");
 const Collection = require("../databases/Collection");
 const Category = require("../databases/Category");
 const Model = require("../databases/Model");
 const Caracteristique = require("../databases/Caracteristique");
 
-//Item
-//POST collection item
-itemRouter.post("/collection/:collectionID", async (request, reponse) => {
+itemRouter.post("/collection/:collectionID",checkJwt(1), async (request, reponse) => {
     const body = request.body;
     
     const collection = await Collection.findByPk(request.params.collectionID)
@@ -66,7 +65,7 @@ itemRouter.post("/collection/:collectionID", async (request, reponse) => {
 });
 
 //GET Item by collection
-itemRouter.get("/all/collection/:collectionId", async (request, reponse) => {
+itemRouter.get("/all/collection/:collectionId",checkJwt(1), async (request, reponse) => {
     const collectionId = request.params.collectionId;
     
     const collection = await Collection.findByPk(collectionId)
@@ -89,7 +88,7 @@ itemRouter.get("/all/collection/:collectionId", async (request, reponse) => {
 });
 
 //GET Items
-itemRouter.get("/all", async (request,reponse)=>{
+itemRouter.get("/all",checkJwt(1), async (request,reponse)=>{
     const items = await Item.findAll()
     .catch(error=>{
         console.log(error)
@@ -103,7 +102,8 @@ itemRouter.get("/all", async (request,reponse)=>{
 });
 
 //GET Item by id
-itemRouter.get("/:id",async (request,reponse)=>{
+
+itemRouter.get("/:id",checkJwt(1) ,async (request,reponse)=>{
     const itemId = request.params.id;
 
     const item = await Item.findByPk(itemId)
@@ -120,7 +120,7 @@ itemRouter.get("/:id",async (request,reponse)=>{
 });
 
 //DELETE Item
-itemRouter.delete("/:id", async (request, reponse)=>{
+itemRouter.delete("/:id",checkJwt(1), async (request, reponse)=>{
     const itemId = request.params.id;
 
     const item = await Item.findByPk(itemId)
@@ -145,7 +145,7 @@ itemRouter.delete("/:id", async (request, reponse)=>{
 });
 
 //POST item 
-itemRouter.post("/",async (request,reponse)=>{
+itemRouter.post("/",checkJwt(1),async (request,reponse)=>{
     const itemBody = request.body;
 
     const item = await Item.create({
@@ -160,7 +160,7 @@ itemRouter.post("/",async (request,reponse)=>{
 });
 
 //UPDATE Item
-itemRouter.put("/",async (request,reponse)=>{
+itemRouter.put("/",checkJwt(1),async (request,reponse)=>{
     const modification = request.body;
 
     const item = await Item.findByPk(modification.id)
@@ -186,7 +186,7 @@ itemRouter.put("/",async (request,reponse)=>{
 });
 
 //Post Item Category
-itemRouter.post("/category", async (request,reponse)=>{
+itemRouter.post("/category",checkJwt(1), async (request,reponse)=>{
     const body = request.body;
    
 
@@ -211,7 +211,7 @@ itemRouter.post("/category", async (request,reponse)=>{
 });
 
 //GET Item by category
-itemRouter.get("/category/:categoryId", async (request , reponse)=>{
+itemRouter.get("/category/:categoryId",checkJwt(1), async (request , reponse)=>{
     const categoryId = request.params.categoryId;
 
     const category = await Category.findByPk(categoryId)

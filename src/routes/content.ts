@@ -3,12 +3,12 @@ import { json, Op } from "sequelize";
 const express = require("express");
 
 export const contentRouter = express.Router();
-
+const checkJwt = require("../middleware/checkjwt")
 const Content = require("../databases/Content");
 const Model = require("../databases/Model");
 
 // post content to model
-contentRouter.post("/model", async (request, reponse) => {
+contentRouter.post("/model",checkJwt(1), async (request, reponse) => {
     const body = request.body;
     try{
         const model = await Model.findByPk(body.modelId)
@@ -39,7 +39,7 @@ contentRouter.post("/model", async (request, reponse) => {
 });
 
 // get content by model
-contentRouter.get("/all/model/:modelId", async (request, reponse) => {
+contentRouter.get("/all/model/:modelId",checkJwt(1), async (request, reponse) => {
     const modelId = request.params.modelId;
     
     const model = await Model.findByPk(modelId)
@@ -63,7 +63,7 @@ contentRouter.get("/all/model/:modelId", async (request, reponse) => {
 
 
 //update
-contentRouter.put("/",async (request,reponse)=>{
+contentRouter.put("/",checkJwt(1),async (request,reponse)=>{
     const modification = request.body;
 
     const content = await Content.findByPk(modification.id)
@@ -89,7 +89,7 @@ contentRouter.put("/",async (request,reponse)=>{
 
 });
 
-contentRouter.delete("/:id", async (request,reponse)=>{
+contentRouter.delete("/:id",checkJwt(1), async (request,reponse)=>{
     const id = request.params.id;
 
     Content.destroy({

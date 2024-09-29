@@ -5,8 +5,9 @@ const express = require("express");
 exports.caracteristiqueRouter = express.Router();
 const Caracteristique = require("../databases/Caracteristique");
 const Model = require("../databases/Model");
+const checkJwt = require("../middleware/checkjwt");
 // get content by model
-exports.caracteristiqueRouter.get("/all/model/:modelId", async (request, reponse) => {
+exports.caracteristiqueRouter.get("/all/model/:modelId", checkJwt(1), async (request, reponse) => {
     const modelId = request.params.modelId;
     const model = await Model.findByPk(modelId)
         .catch(error => {
@@ -26,7 +27,7 @@ exports.caracteristiqueRouter.get("/all/model/:modelId", async (request, reponse
     }
 });
 //post caracteristique to model
-exports.caracteristiqueRouter.post("/model", async (request, reponse) => {
+exports.caracteristiqueRouter.post("/model", checkJwt(1), async (request, reponse) => {
     const body = request.body;
     try {
         console.log(body);
@@ -46,7 +47,7 @@ exports.caracteristiqueRouter.post("/model", async (request, reponse) => {
         return reponse.status(500).json("An error has occurred");
     }
 });
-exports.caracteristiqueRouter.delete("/:id", async (request, reponse) => {
+exports.caracteristiqueRouter.delete("/:id", checkJwt(1), async (request, reponse) => {
     const id = request.params.id;
     Caracteristique.destroy({
         where: {
@@ -59,7 +60,7 @@ exports.caracteristiqueRouter.delete("/:id", async (request, reponse) => {
     });
     reponse.status(200).json("caracteristique has been deleted");
 });
-exports.caracteristiqueRouter.put("/", async (request, reponse) => {
+exports.caracteristiqueRouter.put("/", checkJwt(1), async (request, reponse) => {
     const modification = request.body;
     const caracteristique = await Caracteristique.findByPk(modification.id)
         .catch(error => {

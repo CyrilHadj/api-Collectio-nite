@@ -4,7 +4,8 @@ exports.achievementRouter = void 0;
 const express = require("express");
 exports.achievementRouter = express.Router();
 const Achievement = require("../databases/Achievement");
-exports.achievementRouter.get("/all", async (request, reponse) => {
+const checkJwt = require("../middleware/checkjwt");
+exports.achievementRouter.get("/all", checkJwt(1), async (request, reponse) => {
     const achievements = await Achievement.findAll()
         .catch(error => {
         console.log(error);
@@ -18,7 +19,7 @@ exports.achievementRouter.get("/all", async (request, reponse) => {
     }
     ;
 });
-exports.achievementRouter.get("/:id", async (request, reponse) => {
+exports.achievementRouter.get("/:id", checkJwt(1), async (request, reponse) => {
     const achievement = await Achievement.findByPk(request.params.id)
         .catch(error => {
         console.log(error);
@@ -31,7 +32,7 @@ exports.achievementRouter.get("/:id", async (request, reponse) => {
         reponse.status(404).json("cannot find Achievement");
     }
 });
-exports.achievementRouter.post("/", async (request, reponse) => {
+exports.achievementRouter.post("/", checkJwt(1), async (request, reponse) => {
     const body = request.body;
     const achievement = await Achievement.create({
         name: body.name,
@@ -43,7 +44,7 @@ exports.achievementRouter.post("/", async (request, reponse) => {
     });
     reponse.status(200).json(achievement);
 });
-exports.achievementRouter.delete("/:id", async (request, reponse) => {
+exports.achievementRouter.delete("/:id", checkJwt(1), async (request, reponse) => {
     const id = request.params.id;
     Achievement.destroy({
         where: {
@@ -56,7 +57,7 @@ exports.achievementRouter.delete("/:id", async (request, reponse) => {
     });
     reponse.status(200).json("Achievement has been deleted");
 });
-exports.achievementRouter.put("/", async (request, reponse) => {
+exports.achievementRouter.put("/", checkJwt(1), async (request, reponse) => {
     const modification = request.body;
     const achievement = await Achievement.findByPk(modification.id)
         .catch(error => {

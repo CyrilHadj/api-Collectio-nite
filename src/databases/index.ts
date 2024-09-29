@@ -2,6 +2,7 @@ import { Sequelize, DataTypes } from "sequelize";
 
 import { readFileSync } from "node:fs";
 
+
 const credential = JSON.parse(readFileSync("../credential.json",
     {encoding : "utf8"}
 )) 
@@ -19,8 +20,10 @@ export const sequelize = new Sequelize(login.database, login.username, login.pas
 })
 
 sequelize.authenticate()
-.then(()=>{
+.then(async ()=>{
     console.log("Connexion a la base de donnée réussi")
+
+   
 })
 .catch(error=>console.log(error));
 

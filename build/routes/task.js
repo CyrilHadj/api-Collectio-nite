@@ -5,7 +5,8 @@ const express = require("express");
 exports.taskRouter = express.Router();
 const Task = require("../databases/Task");
 const Model = require("../databases/Model");
-exports.taskRouter.get("/all", async (request, reponse) => {
+const checkJwt = require("../middleware/checkjwt");
+exports.taskRouter.get("/all", checkJwt(1), async (request, reponse) => {
     const task = await Task.findAll()
         .catch(error => {
         console.log(error);
@@ -19,7 +20,7 @@ exports.taskRouter.get("/all", async (request, reponse) => {
     }
     ;
 });
-exports.taskRouter.get("/:id", async (request, reponse) => {
+exports.taskRouter.get("/:id", checkJwt(1), async (request, reponse) => {
     const task = await Task.findByPk(request.params.id)
         .catch(error => {
         console.log(error);
@@ -33,7 +34,7 @@ exports.taskRouter.get("/:id", async (request, reponse) => {
     }
 });
 // post task to model
-exports.taskRouter.post("/model", async (request, reponse) => {
+exports.taskRouter.post("/model", checkJwt(1), async (request, reponse) => {
     const body = request.body;
     try {
         const model = await Model.findByPk(body.modelId);
@@ -52,7 +53,7 @@ exports.taskRouter.post("/model", async (request, reponse) => {
     }
 });
 // get task by model
-exports.taskRouter.get("/all/model/:modelId", async (request, reponse) => {
+exports.taskRouter.get("/all/model/:modelId", checkJwt(1), async (request, reponse) => {
     const modelId = request.params.modelId;
     const model = await Model.findByPk(modelId)
         .catch(error => {
@@ -71,7 +72,7 @@ exports.taskRouter.get("/all/model/:modelId", async (request, reponse) => {
         reponse.status(404).json("collection not found");
     }
 });
-exports.taskRouter.put("/", async (request, reponse) => {
+exports.taskRouter.put("/", checkJwt(1), async (request, reponse) => {
     const modification = request.body;
     const task = await Task.findByPk(modification.id)
         .catch(error => {
@@ -92,7 +93,7 @@ exports.taskRouter.put("/", async (request, reponse) => {
         reponse.status(404).json("an error has occured");
     }
 });
-exports.taskRouter.delete("/:id", async (request, reponse) => {
+exports.taskRouter.delete("/:id", checkJwt(1), async (request, reponse) => {
     const id = request.params.id;
     Task.destroy({
         where: {

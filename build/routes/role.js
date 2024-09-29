@@ -3,8 +3,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.roleRouter = void 0;
 const express = require("express");
 exports.roleRouter = express.Router();
+const checkJwt = require("../middleware/checkjwt");
 const Role = require("../databases/Role");
-exports.roleRouter.get("/all", async (request, reponse) => {
+exports.roleRouter.get("/all", checkJwt(1), async (request, reponse) => {
     const model = await Role.findAll()
         .catch(error => {
         console.log(error);
@@ -18,7 +19,7 @@ exports.roleRouter.get("/all", async (request, reponse) => {
     }
     ;
 });
-exports.roleRouter.get("/:id", async (request, reponse) => {
+exports.roleRouter.get("/:id", checkJwt(1), async (request, reponse) => {
     const model = await Role.findByPk(request.params.id)
         .catch(error => {
         console.log(error);
@@ -31,7 +32,7 @@ exports.roleRouter.get("/:id", async (request, reponse) => {
         reponse.status(404).json("cannot find role");
     }
 });
-exports.roleRouter.post("/", async (request, reponse) => {
+exports.roleRouter.post("/", checkJwt(1), async (request, reponse) => {
     const body = request.body;
     const role = await Role.create({
         name: body.name,
@@ -43,7 +44,7 @@ exports.roleRouter.post("/", async (request, reponse) => {
     });
     reponse.status(200).json(role);
 });
-exports.roleRouter.delete("/:id", async (request, reponse) => {
+exports.roleRouter.delete("/:id", checkJwt(1), async (request, reponse) => {
     const id = request.params.id;
     Role.destroy({
         where: {
@@ -56,7 +57,7 @@ exports.roleRouter.delete("/:id", async (request, reponse) => {
     });
     reponse.status(200).json("role has been deleted");
 });
-exports.roleRouter.put("/", async (request, reponse) => {
+exports.roleRouter.put("/", checkJwt(1), async (request, reponse) => {
     const modification = request.body;
     const role = await Role.findByPk(modification.id)
         .catch(error => {

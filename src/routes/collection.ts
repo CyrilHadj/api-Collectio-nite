@@ -1,13 +1,13 @@
-import { json, Op } from "sequelize";
+import { DataTypes, json, Op } from "sequelize";
 
 const express = require("express");
-
+const checkJwt = require("../middleware/checkjwt")
 export const collectionRouter = express.Router();
 const Collection = require("../databases/Collection");
+const User = require("../databases/User");
 
 
-
-collectionRouter.get("/all", async (request, reponse)=>{
+collectionRouter.get("/all",checkJwt(1), async (request, reponse)=>{
 
     const collections = await Collection.findAll()
     .catch(error=>{
@@ -23,7 +23,7 @@ collectionRouter.get("/all", async (request, reponse)=>{
 });
 
 
-collectionRouter.get("/:id", async (request,reponse)=>{
+collectionRouter.get("/:id",checkJwt(1), async (request,reponse)=>{
 
     const collection = await Collection.findByPk(request.params.id)
     .catch(error=>{
@@ -39,7 +39,7 @@ collectionRouter.get("/:id", async (request,reponse)=>{
 });
 
 
-collectionRouter.get("/search/:input", async (request,reponse)=>{
+collectionRouter.get("/search/:input",checkJwt(1), async (request,reponse)=>{
     const search = request.params.input;
    
     const collection = await Collection.findAll({
@@ -61,7 +61,7 @@ collectionRouter.get("/search/:input", async (request,reponse)=>{
 
 
 
-collectionRouter.get("/category/:categoryId" , async (request,reponse)=>{
+collectionRouter.get("/category/:categoryId" ,checkJwt(1), async (request,reponse)=>{
     const categoryId = request.params.categoryId;
     const collection = await Collection.findAll({
         where : {
@@ -80,9 +80,45 @@ collectionRouter.get("/category/:categoryId" , async (request,reponse)=>{
     }
 })
 
+collectionRouter.post("/user",checkJwt(1), async (request,reponse)=>{
+    const body = request.body;
+    console.log(body)
+    try{
+        const user = await User.findByPk(request.body.userId)
+        
+        const collection = await Collection.create({
+            name : body.name,
+            description : body.description
+        })
+
+        await user.addCollection(collection)
+
+        reponse.status(200).json(collection)
+
+    }catch(error){
+        console.log(error);
+        return reponse.status(500).json({ error: "An error has occurred" });
+    }
+})
+
+collectionRouter.get("/user/:userId",checkJwt(1), async (request,reponse)=>{
+    const body = request.body;
+    try{
+        const user = await User.findByPk(request.params.userId)
+
+        const collection = await user.getCollections()
+
+        reponse.status(200).json(collection)
+
+    }catch(error){
+        console.log(error);
+        return reponse.status(500).json({ error: "An error has occurred" });
+    }
+})
 
 
-collectionRouter.post("/", async (request,reponse)=>{
+
+collectionRouter.post("/",checkJwt(1), async (request,reponse)=>{
     const bodyCollection =  request.body ;
   
     const collection = await Collection.create({
@@ -99,7 +135,7 @@ collectionRouter.post("/", async (request,reponse)=>{
 
 
 
-collectionRouter.delete("/:id", async (request,reponse)=>{
+collectionRouter.delete("/:id",checkJwt(1), async (request,reponse)=>{
     const collectionId = request.params.id;
 
     await Collection.destroy({
@@ -116,7 +152,7 @@ collectionRouter.delete("/:id", async (request,reponse)=>{
 })
 
 
-collectionRouter.put("/", async (request,reponse)=>{
+collectionRouter.put("/",checkJwt(1), async (request,reponse)=>{
     const modification = request.body;
 
     const collection = await Collection.findByPk(modification.id)
