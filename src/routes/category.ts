@@ -3,8 +3,8 @@ import { json, Op } from "sequelize";
 const express = require("express");
 
 export const categoryRouter = express.Router();
-
 const Category = require("../databases/Category");
+const checkJwt = require("../middleware/checkjwt")
 
 
 categoryRouter.get("/all",checkJwt(1),async (request, reponse)=>{

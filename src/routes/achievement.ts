@@ -3,8 +3,8 @@ import { json, Op } from "sequelize";
 const express = require("express");
 
 export const achievementRouter = express.Router();
-const checkJwt = require("../middleware/checkjwt")
 const Achievement = require("../databases/Achievement");
+const checkJwt = require("../middleware/checkjwt")
 
 
 achievementRouter.get("/all",checkJwt(1),async (request, reponse)=>{

@@ -3,9 +3,9 @@ import { json, Op } from "sequelize";
 const express = require("express");
 
 export const caracteristiqueRouter = express.Router();
-
 const Caracteristique = require("../databases/Caracteristique");
 const Model = require("../databases/Model");
+const checkJwt = require("../middleware/checkjwt")
 
 // get content by model
 caracteristiqueRouter.get("/all/model/:modelId",checkJwt(1), async (request, reponse) => {
